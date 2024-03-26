@@ -8,16 +8,22 @@ NAME			:=	fdf
 
 # DEBUG			:=	-g 
 CC				:=	gcc -Wall -Werror -Wextra $(DEBUG)
-INC_DIR			:= 	includes
-INCLUDES		:=	-I $(INC_DIR) -I libft/includes
+INCLUDES		:=	-I includes $(LIBFT_INCLUDE) $(MLX42_INCLUDE)
+
 LIBFT_DIR		:=	libft/
+LIBFT_INCLUDE	:=	-I $(LIBFT_DIR)/includes
 LIBFT			:=	$(LIBFT_DIR)libft.a
 LIBFT_FLAGS		:=	-L $(LIBFT_DIR)
+
+MLX42_DIR		:= MLX42/
+MLX42_INCLUDE	:= -I $(MLX42_DIR)include
+MLX42			:= $(MLX42_DIR)build/libmlx42.a
+MLX42_FLAGS		:= -L $(MLX42_DIR)build/
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ_DIR) $(OBJ)
-	@$(CC)$(INCLUDES) $(LIBFT_FLAGS) $(OBJ) -lft -o $@
+	$(CC)$(INCLUDES) $(LIBFT_FLAGS) $(MLX42_FLAGS) $(OBJ) -lft -o $@
 	@echo "$(CC)$(INCLUDES) -lft -o $(NAME)"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
