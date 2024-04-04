@@ -1,0 +1,31 @@
+args:
+	1 == filename
+	2 == case_size
+	3 == z_size
+If no args or too many args:
+	prints "Usage : ./fdf_linux <filename> [ case_size z_size ]"
+If arg 1 is invalid filename
+	prints "No file <filename>"
+If file has no perms
+	prints "No file <filename>"
+If file can't be read
+	prints "No data found."
+in maps
+	lines must all have the same number of elelemnts
+	elements must be seperated by whitespace (spaces, tabs and maybe more)
+	maps do not need to end with .fdf
+
+
+
+Plan:
+	Open file
+	new_row == first row read from file
+	if (new_row == invalid)
+		print "No data found."
+	while (new_row == valid)
+		draw_row(new_row, last_row)
+		last_row == first_row
+		first_row == new_row read from file
+
+
+	draw_row
