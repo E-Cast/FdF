@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/04 02:59:49 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/06 02:32:57 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,24 @@
 # include <MLX42/MLX42.h>
 # include "libft.h"
 
-int	open_file(char *file_name);
+typedef struct s_dot
+{
+	int	x;
+	int	y;
+	int	z;
+	unsigned int	color;
+	void			*next;
+}	t_dot;
+
+typedef struct s_map
+{
+	int		height;
+	int		width;
+	t_dot	**dots;
+}	t_map;
+
+int		open_map(char *file_name);
+
+t_dot	*make_new_dot(char *raw_data, int x, int y);
 
 #endif

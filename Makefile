@@ -1,5 +1,5 @@
 SRC				=	main.c \
-					test.c
+					map.c
 
 SRC_DIR			:=	sources/
 OBJ_DIR			:=	objects/
