@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/06 02:34:04 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/06 03:33:21 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_dot	*make_new_dot(char *raw_data, int x, int y)
 	if (data == NULL)
 		return (my_safefree(dot));
 	dot->z = ft_atoi(data[0]);
-	// dot->color = ft_hex(data[1]);
+	dot->color = ft_hex(data[1]);
 	return (dot);
 }
 

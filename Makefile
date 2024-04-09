@@ -1,5 +1,6 @@
 SRC				=	main.c \
-					map.c
+					map.c \
+					my_atoh.c
 
 SRC_DIR			:=	sources/
 OBJ_DIR			:=	objects/

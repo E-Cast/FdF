@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/06 02:31:35 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/06 02:55:43 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	main(int argc, char **argv)
 	// mlx_init(10, 10, "test", 0);
 	dot = make_new_dot("9,0xff", 2, 1);
 	printf("X:%i\nY:%i\nZ:%i\nColor:%i\n", dot->x, dot->y, dot->z, dot->color);
+	INT_MAX;
+	255255255;
 	(void) argc;
 	(void) argv;
 }
