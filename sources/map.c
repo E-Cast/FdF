@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/06 03:33:21 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/09 21:30:32 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,36 +34,36 @@ int	open_map(char *file_name)
 		else if (errno == EACCES)
 			ft_putstr_fd("Permission denied: ", STDERR_FILENO);
 		else
-			ft_putstr_fd("Invalid filename: ", STDERR_FILENO);
+			ft_putstr_fd("Could not read data: ", STDERR_FILENO);
 		ft_putendl_fd(file_name, STDERR_FILENO);
 	}
 	return (fd);
 }
 
-t_dot	*make_new_dot(char *raw_data, int x, int y)
-{
-	t_dot	*dot;
-	char	**data;
+// t_dot	*make_new_dot(char *raw_data, int x, int y)
+// {
+// 	t_dot	*dot;
+// 	char	**data;
 
-	dot = ft_calloc(1, sizeof(t_dot));
-	if (dot == NULL)
-		return (NULL);
-	dot->x = x;
-	dot->y = y;
-	dot->next = NULL;
-	if (ft_strchr(raw_data, ',') == NULL)
-	{
-		dot->z = ft_atoi(raw_data);
-		dot->color = 255; //default color placeholder, should maybe do a define
-		return (dot);
-	}
-	data = ft_split(raw_data, ',');
-	if (data == NULL)
-		return (my_safefree(dot));
-	dot->z = ft_atoi(data[0]);
-	dot->color = ft_hex(data[1]);
-	return (dot);
-}
+// 	dot = ft_calloc(1, sizeof(t_dot));
+// 	if (dot == NULL)
+// 		return (NULL);
+// 	dot->x = x;
+// 	dot->y = y;
+// 	dot->next = NULL;
+// 	if (ft_strchr(raw_data, ',') == NULL)
+// 	{
+// 		dot->z = ft_atoi(raw_data);
+// 		dot->color = 255; //default color placeholder, should maybe do a define
+// 		return (dot);
+// 	}
+// 	data = ft_split(raw_data, ',');
+// 	if (data == NULL)
+// 		return (my_safefree(dot));
+// 	dot->z = ft_atoi(data[0]);
+// 	dot->color = ft_hex(data[1]);
+// 	return (dot);
+// }
 
 // t_map	read_map(int map_fd)
 // {

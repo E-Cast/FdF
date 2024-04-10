@@ -34,14 +34,14 @@ int32_t	main(void)
 	// int get_rgba(int r, int g, int b, int a)
 	unsigned int	i;
 	unsigned int	j;
-	i = 1;
+	i = 0;
 	printf("%i\n", get_rgba(245, 40, 145, 0));
 	while (i < img->height)
 	{
-		j = 1;
+		j = 0;
 		while (j < img->width)
 		{
-			mlx_put_pixel(img, j, i, 0xF611FF);
+			mlx_put_pixel(img, j, i, 0xF611FFFF);
 			j++;
 		}
 		i++;

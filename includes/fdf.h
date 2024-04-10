@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/06 02:56:00 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/09 22:38:31 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,9 @@ typedef struct s_dot
 	int		x;
 	int		y;
 	int		z;
-	int		color;
+	size_t	color;
 	void	*next;
 }	t_dot;
-
-typedef struct s_map
-{
-	int		height;
-	int		width;
-	t_dot	**dots;
-}	t_map;
 
 int		open_map(char *file_name);
 
