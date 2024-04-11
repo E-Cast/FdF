@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 02:49:44 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 14:52:56 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,32 +38,6 @@ int	open_map(char *file_name)
 		ft_putendl_fd(file_name, STDERR_FILENO);
 	}
 	return (fd);
-}
-
-/**
- * @brief Finds the number of dots in the line.
- * 
- * @param line Line containing the dots
- * @retval Number of dots in the line.
- */
-int	find_x(char *line)
-{
-	int	index;
-	int	x;
-
-	index = 0;
-	x = 0;
-	while (line[index] && my_isspace(line[index]) != 0)
-		index++;
-	while (line[index])
-	{
-		x++;
-		while (line[index] && my_isspace(line[index]) == 0)
-			index++;
-		while (line[index] && my_isspace(line[index]) != 0)
-			index++;
-	}
-	return (x);
 }
 
 /**
@@ -103,12 +77,41 @@ t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
 	return (lines);
 }
 
+/**
+ * @brief Creates an array of size x containing dots from the provided line.
+ * 
+ * @param line Str to extract the dots from.
+ * @param map_x Size of the array to create.
+ * @retval NULL On failure.
+ * @retval On success an array of size x containing dots.
+ */
 t_dot	*line_to_dots(char *line, int map_x)
 {
-	if (line && map_x > 12) ///
-		return (ft_calloc(map_x + 1, sizeof(t_dot)));
-	printf ("test 1\n");
-	return (NULL);
+	t_dot	*map_line;
+	int		map_inx;
+	int		inx;
+
+	map_line = ft_calloc(map_x + 1, sizeof(t_dot));
+	if (map_line == NULL)
+		return (NULL);
+	inx = 0;
+	map_inx = 0;
+	while (line[inx])
+	{
+		map_line[map_inx].z = fdf_atoi(line, &inx);
+		if (line[inx] == ',')
+		{
+			map_line[map_inx].color = my_atoh(&line[inx + 1]);
+		}
+		else
+			map_line[map_inx].color = DEFAULT_COLOR;
+		while (line[inx] && my_isspace(line[inx]) == 0)
+			inx++;
+		while (line[inx] && my_isspace(line[inx]) != 0)
+			inx++;
+		map_inx++;
+	}
+	return (map_line);
 }
 
 /**
@@ -135,9 +138,8 @@ t_dot	**buil_map_arrays(char *map_file)
 		return (ft_lstclear(&lines, free), NULL);
 	while (map_y > 0)
 	{
-		printf("y:%i\nx:%i\n\n", map_y, map_x--);
 		map_y--;
-		map[map_y] = line_to_dots(ft_lstlast(lines)->content, map_x);//
+		map[map_y] = line_to_dots(ft_lstlast(lines)->content, map_x);
 		if (map[map_y] == NULL)
 			return (free_map(map, map_y + 1), ft_lstclear(&lines, free), NULL);
 		my_lstdellast(&lines, free);
