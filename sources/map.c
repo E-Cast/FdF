@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 14:52:56 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 14:59:09 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_dot	*line_to_dots(char *line, int map_x)
 		return (NULL);
 	inx = 0;
 	map_inx = 0;
-	while (line[inx])
+	while (line[inx] && map_inx < map_x)
 	{
 		map_line[map_inx].z = fdf_atoi(line, &inx);
 		if (line[inx] == ',')
