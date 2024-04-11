@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/10 23:53:26 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 02:43:54 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,53 +51,97 @@ static int	find_x(char *line)
 t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
 {
 	int		map_fd;
-	char	*read_line;
+	char	*line;
 	t_list	*new_line;
 
-	map_fd = open(map_file, O_RDONLY);
+	map_fd = open_map(map_file);
 	if (map_fd == -1)
 		return (NULL);
-	read_line = get_next_line(map_fd);
-	while (read_line != NULL)
+	line = get_next_line(map_fd);
+	while (line != NULL)
 	{
-		if (*x == -1)
-			*x = find_x(read_line);
-		else if (*x != find_x(read_line))
-			return (ft_lstclear(lines, free), free(read_line), NULL);
+		if (*x == 0)
+			*x = find_x(line);
+		else if (*x != find_x(line))
+			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
 		(*y)++;
-		new_line = ft_lstnew(read_line);
+		new_line = ft_lstnew(line);
 		if (new_line == NULL)
-			return (ft_lstclear(lines, free), free(read_line), NULL);
+			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
 		ft_lstadd_back(lines, new_line);
-		read_line = get_next_line(map_fd);
+		line = get_next_line(map_fd);
 	}
+	close(map_fd);
 	return (lines);
+}
+
+/**
+ * @brief Frees the map array and it's sub arrays.
+ * 
+ * @param map 3D array to be freed.
+ * @param index Index to start freeing from.
+ */
+void	free_map(t_dot	**map, int index) //to move to another file
+{
+	while (map && map[index])
+	{
+		printf ("test 2\n");
+		free(map[index++]);
+	}
+	printf ("test 3\n");
+	free(map);
+}
+
+t_dot	*line_to_dots(char *line, int map_x)
+{
+	if (line && map_x > 12) ///
+		return (ft_calloc(map_x + 1, sizeof(t_dot)));
+	printf ("test 1\n");
+	return (NULL);
+}
+
+/**
+ * @brief Builds the map 3D array from the map file.
+ * 
+ * @param map_file Text file containing the map data.
+ * @retval NULL on failure.
+ * @retval The map on success.
+ */
+t_dot	**buil_map_arrays(char *map_file)
+{
+	int		map_x;
+	int		map_y;
+	t_list	*lines;
+	t_dot	**map;
+
+	map_x = 0;
+	map_y = 0;
+	lines = NULL;
+	if (read_map(map_file, &lines, &map_x, &map_y) == NULL)
+		return (ft_putendl_fd("Failed to read map.", STDERR_FILENO), NULL);
+	map = ft_calloc(map_y + 1, sizeof(t_dot *));
+	if (map == NULL)
+		return (ft_lstclear(&lines, free), NULL);
+	while (map_y > 0)
+	{
+		printf("y:%i\nx:%i\n\n", map_y, map_x--);
+		map_y--;
+		map[map_y] = line_to_dots(ft_lstlast(lines)->content, map_x);
+		if (map[map_y] == NULL)
+			return (free_map(map, map_y + 1), ft_lstclear(&lines, free), NULL);
+		my_lstdellast(&lines, free);
+	}
+	return (map);
 }
 
 int	main(int argc, char **argv)
 {
-	int		x;
-	int		y;
-	t_list	*lines;
-	t_list	*lines_index;
+	t_dot	**map;
 
-	x = -1;
-	y = 0;
-	lines = NULL;
-	if (read_map(argv[1], &lines, &x, &y) == NULL)
-	{
-		ft_putendl_fd("Error: Failed to read map.", STDERR_FILENO);
+	map = buil_map_arrays(argv[1]);
+	if (map == NULL)
 		return (1);
-	}
-
-	lines_index = lines;
-	printf("x:%i\ny:%i\n", x, y);
-	while (lines_index != NULL)
-	{
-		printf("%s\n", (char *)lines_index->content);
-		lines_index = lines_index->next;
-	}
-	ft_lstclear(&lines, free);
+	free_map(map, 0);
 	(void) argc;
 }
 

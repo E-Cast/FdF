@@ -1,6 +1,5 @@
 SRC				=	main.c \
-					map.c \
-					my_atoh.c
+					map.c
 
 SRC_DIR			:=	sources/
 OBJ_DIR			:=	objects/
@@ -18,7 +17,7 @@ MLX42_INCLUDE	:= -I $(MLX42_DIR)include
 MLX42			:= $(MLX42_DIR)build/libmlx42.a
 MLX42_FLAGS		:= -ldl -lglfw -pthread -lm
 
-# DEBUG			:=	-g
+DEBUG			:=	-g
 OPTIMIZE		:=	-Ofast
 CC				:=	gcc -Wall -Werror -Wextra -Wunreachable-code $(DEBUG) $(OPTIMIZE)
 INCLUDES		:=	-I includes $(LIBFT_INCLUDE) $(MLX42_INCLUDE)
