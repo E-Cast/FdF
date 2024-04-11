@@ -6,58 +6,147 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/10 03:17:12 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/10 23:53:26 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	main(int argc, char **argv)
+/**
+ * @brief Finds the number of dots in the line.
+ * 
+ * @param line Line containing the dots
+ * @retval Number of dots in the line.
+ */
+static int	find_x(char *line)
+{
+	int	index;
+	int	x;
+
+	index = 0;
+	x = 0;
+	while (line[index] && my_isspace(line[index]) != 0)
+		index++;
+	while (line[index])
+	{
+		x++;
+		while (line[index] && my_isspace(line[index]) == 0)
+			index++;
+		while (line[index] && my_isspace(line[index]) != 0)
+			index++;
+	}
+	return (x);
+}
+
+/**
+ * @brief Reads every line from the map and returns them in a linked list.
+ * 
+ * @param map_file File containing the map.
+ * @param lines 
+ * @param x Size x of the map.
+ * @param y Size y of the map.
+ * @retval NULL On failure.
+ * @retval A pointer to the linked list containing every lines from the map.
+ */
+t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
 {
 	int		map_fd;
-	char	*line;
-	int		str_index;
-	int		x_index;
-	int		y_index;
+	char	*read_line;
+	t_list	*new_line;
 
-	map_fd = open(argv[1], O_RDONLY);
+	map_fd = open(map_file, O_RDONLY);
 	if (map_fd == -1)
-		return (1);
-	y_index = 1;
-	line = get_next_line(map_fd);
-	while (line != NULL)
+		return (NULL);
+	read_line = get_next_line(map_fd);
+	while (read_line != NULL)
 	{
-		printf("Line %i\n", y_index);
-		str_index = 0;
-		x_index = 1;
-		if (my_isspace(line[str_index]))
-			str_index++;
-		while (line[str_index] != '\0')
-		{
-			if (my_isspace(line[str_index]) == 0)
-			{
-				printf("x:%i\ny:%i\nz:%i\n",
-					x_index, y_index, ft_atoi(&line[str_index]));
-				while (line[str_index] && (my_isspace(line[str_index]) == 0 && line[str_index] != ','))
-					str_index++;
-				if (line[str_index] == ',')
-					printf("color:0x%lx\n", my_atoh(&line[str_index + 1]));
-				while (line[str_index] && my_isspace(line[str_index]) == 0)
-					str_index++;
-				printf("\n");
-				x_index++;
-			}
-			else
-				while (line[str_index] && my_isspace(line[str_index]))
-					str_index++;
-		}
-		y_index++;
-		free(line);
-		line = get_next_line(map_fd);
+		if (*x == -1)
+			*x = find_x(read_line);
+		else if (*x != find_x(read_line))
+			return (ft_lstclear(lines, free), free(read_line), NULL);
+		(*y)++;
+		new_line = ft_lstnew(read_line);
+		if (new_line == NULL)
+			return (ft_lstclear(lines, free), free(read_line), NULL);
+		ft_lstadd_back(lines, new_line);
+		read_line = get_next_line(map_fd);
 	}
-	(void) argc;
-	return (0);
+	return (lines);
 }
+
+int	main(int argc, char **argv)
+{
+	int		x;
+	int		y;
+	t_list	*lines;
+	t_list	*lines_index;
+
+	x = -1;
+	y = 0;
+	lines = NULL;
+	if (read_map(argv[1], &lines, &x, &y) == NULL)
+	{
+		ft_putendl_fd("Error: Failed to read map.", STDERR_FILENO);
+		return (1);
+	}
+
+	lines_index = lines;
+	printf("x:%i\ny:%i\n", x, y);
+	while (lines_index != NULL)
+	{
+		printf("%s\n", (char *)lines_index->content);
+		lines_index = lines_index->next;
+	}
+	ft_lstclear(&lines, free);
+	(void) argc;
+}
+
+// int	main(int argc, char **argv)
+// {
+// 	int		map_fd;
+// 	char	*line;
+// 	int		str_index;
+// 	int		x_index;
+// 	int		y_index;
+
+// 	map_fd = open(argv[1], O_RDONLY);
+// 	if (map_fd == -1)
+// 		return (1);
+// 	y_index = 1;
+// 	line = get_next_line(map_fd);
+// 	while (line != NULL)
+// 	{
+// 		printf("Line %i\n", y_index);
+// 		str_index = 0;
+// 		x_index = 1;
+// 		if (my_isspace(line[str_index]))
+// 			str_index++;
+// 		while (line[str_index] != '\0')
+// 		{
+// 			if (my_isspace(line[str_index]) == 0)
+// 			{
+// 				printf("x:%i\ny:%i\nz:%i\n",
+// 					x_index, y_index, ft_atoi(&line[str_index]));
+// 				while (line[str_index] && (my_isspace(line[str_index]) == 0 && line[str_index] != ','))
+// 					str_index++;
+// 				if (line[str_index] == ',')
+// 					printf("color:0x%lx\n", my_atoh(&line[str_index + 1]));
+// 				while (line[str_index] && my_isspace(line[str_index]) == 0)
+// 					str_index++;
+// 				printf("\n");
+// 				x_index++;
+// 			}
+// 			else
+// 				while (line[str_index] && my_isspace(line[str_index]))
+// 					str_index++;
+// 		}
+// 		y_index++;
+// 		free(line);
+// 		line = get_next_line(map_fd);
+// 	}
+// 	(void) argc;
+// 	return (0);
+// }
 
 // t_dot	*new_dot(char *dot_data, int x, int y)
 // {

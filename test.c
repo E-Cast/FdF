@@ -41,7 +41,7 @@ int32_t	main(void)
 		j = 0;
 		while (j < img->width)
 		{
-			mlx_put_pixel(img, j, i, 0xF611FFFF);
+			mlx_put_pixel(img, j, i, 0xFFFFFFFF);
 			j++;
 		}
 		i++;
