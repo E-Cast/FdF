@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 14:54:18 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 23:04:24 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,30 +20,40 @@
 # include <MLX42/MLX42.h>
 # include "libft.h"
 
-# ifndef DEFAULT_COLOR
-#  define DEFAULT_COLOR 0xFFFFFFFF
-# endif
-
-# ifndef X_Y_SCALE
-#  define X_Y_SCALE 10
+# ifndef XY_SCALE
+#  define XY_SCALE 10
 # endif
 
 # ifndef Z_SCALE
 #  define Z_SCALE 10
 # endif
 
+# ifndef DEF_COLOR
+#  define DEF_COLOR 0xFFFFFFFF
+# endif
+
+typedef struct s_data
+{
+	int		xy_scale;
+	int		z_scale;
+	int		max_x;
+	int		max_y;
+	size_t	def_color;
+}	t_data;
+
 typedef struct s_dot
 {
 	int		z;
 	size_t	color;
+	bool	last;
 }	t_dot;
 
 // map.c
 
 int		open_map(char *file_name);
 t_list	**read_map(char *map_file, t_list **lines, int *x, int *y);
-t_dot	*line_to_dots(char *line, int map_x);
-t_dot	**buil_map_arrays(char *map_file);
+t_dot	*line_to_dots(char *line, int map_x, size_t	color);
+t_dot	**buil_map_arrays(char *map_file, t_data *data);
 
 // util.c
 

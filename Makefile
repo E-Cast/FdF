@@ -26,7 +26,7 @@ INCLUDES		:=	-I includes $(LIBFT_INCLUDE) $(MLX42_INCLUDE)
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(MLX42) $(OBJ_DIR) $(OBJ)
-	@$(CC)$(OBJ) $(MLX42) $(INCLUDES) $(LIBFT_FLAGS) $(MLX42_FLAGS) -o $@
+	$(CC)$(OBJ) $(MLX42) $(INCLUDES) $(LIBFT_FLAGS) $(MLX42_FLAGS) -o $@
 	@echo "$(CC) $(INCLUDES) $(LIBFT_FLAGS) $(MLX42_FLAGS) -o $(NAME)"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c

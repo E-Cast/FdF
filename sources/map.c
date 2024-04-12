@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 14:59:09 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 23:03:56 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,13 @@ int	open_map(char *file_name)
 {
 	int	fd;
 
-	if (access(file_name, R_OK) == 0)
+	fd = open(file_name, O_DIRECTORY);
+	if (fd != -1)
+	{
+		close(fd);
+		fd = -1;
+	}
+	else if (access(file_name, R_OK) == 0)
 		fd = open(file_name, O_RDONLY);
 	else
 		fd = -1;
@@ -36,6 +42,7 @@ int	open_map(char *file_name)
 		else
 			ft_putstr_fd("Could not read data: ", STDERR_FILENO);
 		ft_putendl_fd(file_name, STDERR_FILENO);
+		exit (EXIT_FAILURE);
 	}
 	return (fd);
 }
@@ -82,10 +89,11 @@ t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
  * 
  * @param line Str to extract the dots from.
  * @param map_x Size of the array to create.
+ * @param color Default color for dots.
  * @retval NULL On failure.
  * @retval On success an array of size x containing dots.
  */
-t_dot	*line_to_dots(char *line, int map_x)
+t_dot	*line_to_dots(char *line, int map_x, size_t	color)
 {
 	t_dot	*map_line;
 	int		map_inx;
@@ -100,11 +108,9 @@ t_dot	*line_to_dots(char *line, int map_x)
 	{
 		map_line[map_inx].z = fdf_atoi(line, &inx);
 		if (line[inx] == ',')
-		{
 			map_line[map_inx].color = my_atoh(&line[inx + 1]);
-		}
 		else
-			map_line[map_inx].color = DEFAULT_COLOR;
+			map_line[map_inx].color = color;
 		while (line[inx] && my_isspace(line[inx]) == 0)
 			inx++;
 		while (line[inx] && my_isspace(line[inx]) != 0)
@@ -118,10 +124,11 @@ t_dot	*line_to_dots(char *line, int map_x)
  * @brief Builds the map 3D array from the map file.
  * 
  * @param map_file Text file containing the map data.
+ * @param data General fdf data.
  * @retval NULL on failure.
  * @retval The map on success.
  */
-t_dot	**buil_map_arrays(char *map_file)
+t_dot	**buil_map_arrays(char *map_file, t_data *data)
 {
 	int		map_x;
 	int		map_y;
@@ -132,14 +139,17 @@ t_dot	**buil_map_arrays(char *map_file)
 	map_y = 0;
 	lines = NULL;
 	if (read_map(map_file, &lines, &map_x, &map_y) == NULL)
-		return (ft_putendl_fd("Failed to read map.", STDERR_FILENO), NULL);
+		return (NULL);
+	data->max_x = map_x;
+	data->max_y = map_y;
 	map = ft_calloc(map_y + 1, sizeof(t_dot *));
 	if (map == NULL)
 		return (ft_lstclear(&lines, free), NULL);
 	while (map_y > 0)
 	{
 		map_y--;
-		map[map_y] = line_to_dots(ft_lstlast(lines)->content, map_x);
+		map[map_y] = line_to_dots(ft_lstlast(lines)->content,
+				map_x, data->def_color);
 		if (map[map_y] == NULL)
 			return (free_map(map, map_y + 1), ft_lstclear(&lines, free), NULL);
 		my_lstdellast(&lines, free);
