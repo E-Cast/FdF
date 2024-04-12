@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 23:32:16 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 23:36:41 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	test_draw_dots(t_data data, t_dot **map, mlx_image_t *img)
 {
 	int	y_index;
 	int	x_index;
-	// int	y_pos;
-	// int	x_pos;
+	int	x_pos;
+	int	y_pos;
 
 	y_index = 0;
 	while (y_index < data.max_y)
@@ -60,8 +60,9 @@ void	test_draw_dots(t_data data, t_dot **map, mlx_image_t *img)
 		x_index = 0;
 		while (x_index < data.max_x)
 		{
-			mlx_put_pixel(img, (x_index + 1) * data.xy_scale,
-				(y_index + 1) * data.xy_scale, map[y_index][x_index].color);
+			x_pos = (x_index + 1) * data.xy_scale;
+			y_pos = (y_index + 1) * data.xy_scale;
+			mlx_put_pixel(img, x_pos, y_pos, map[y_index][x_index].color);
 			x_index++;
 		}
 		y_index++;
