@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 17:52:21 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:58:43 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,32 +43,72 @@ int	open_map_file(char *file_name)
  * @retval NULL On failure.
  * @retval A pointer to the linked list containing every lines from the map.
  */
-t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
+t_list	**read_map(char *file_name, t_list **lines, int *x, int *y)
 {
-	int		map_fd;
-	char	*line;
-	t_list	*new_line;
+	int	fd;//
+	char	*line;////
+	t_list	*new_line;////
 
-	map_fd = open_map_file(map_file);
-	if (map_fd == -1)
-		return (NULL);
-	line = get_next_line(map_fd);
-	while (line != NULL)
+	fd = open(file_name, O_DIRECTORY);//
+	if (fd != -1)//
+		return (close(fd), ft_putendl_fd("Failed to open map.", ERR_FD), NULL);//
+	if (access(file_name, R_OK) == 0)//
+		fd = open(file_name, O_RDONLY);//
+	if (fd == -1)//
+		return (ft_putendl_fd("Failed to open map.", ERR_FD), NULL);//
+	line = get_next_line(fd);////
+	while (line != NULL)////
 	{
 		if (*x == 0)
 			*x = find_x(line);
 		else if (*x != find_x(line))
-			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
+			return (ft_lstclear(lines, free), free(line), close(fd), NULL);
 		(*y)++;
-		new_line = ft_lstnew(line);
-		if (new_line == NULL)
-			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
-		ft_lstadd_back(lines, new_line);
-		line = get_next_line(map_fd);
+		new_line = ft_lstnew(line);////
+		if (new_line == NULL)////
+			return (ft_lstclear(lines, free), free(line), close(fd), NULL);////
+		ft_lstadd_back(lines, new_line);////
+		line = get_next_line(fd);////
 	}
-	close(map_fd);
-	return (lines);
+	return (close(fd), lines);////
 }
+
+/**
+ * @brief Reads every line from the map and returns them in a linked list.
+ * 
+ * @param map_file File containing the map.
+ * @param lines 
+ * @param x Size x of the map.
+ * @param y Size y of the map.
+ * @retval NULL On failure.
+ * @retval A pointer to the linked list containing every lines from the map.
+ */
+// t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
+// {
+// 	int		map_fd;
+// 	char	*line;
+// 	t_list	*new_line;
+
+// 	map_fd = open_map_file(map_file);
+// 	if (map_fd == -1)
+// 		return (NULL);
+// 	line = get_next_line(map_fd);
+// 	while (line != NULL)
+// 	{
+// 		if (*x == 0)
+// 			*x = find_x(line);
+// 		else if (*x != find_x(line))
+// 			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
+// 		(*y)++;
+// 		new_line = ft_lstnew(line);
+// 		if (new_line == NULL)
+// 			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
+// 		ft_lstadd_back(lines, new_line);
+// 		line = get_next_line(map_fd);
+// 	}
+// 	close(map_fd);
+// 	return (lines);
+// }
 
 /**
  * @brief Creates an array of size x containing dots from the provided line.
