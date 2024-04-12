@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 23:03:56 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 23:12:19 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ t_dot	*line_to_dots(char *line, int map_x, size_t	color)
 /**
  * @brief Builds the map 3D array from the map file.
  * 
- * @param map_file Text file containing the map data.
+ * @param map_file Text file containing the map data and settings.
  * @param data General fdf data.
  * @retval NULL on failure.
  * @retval The map on success.

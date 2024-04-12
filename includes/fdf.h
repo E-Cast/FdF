@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 23:04:24 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/11 23:23:07 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ typedef struct s_data
 {
 	int		xy_scale;
 	int		z_scale;
+	size_t	def_color;
 	int		max_x;
 	int		max_y;
-	size_t	def_color;
+	float	angle;
 }	t_data;
 
 typedef struct s_dot
