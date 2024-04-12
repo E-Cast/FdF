@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 04:08:37 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:52:21 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,17 @@
  * @retval Returns a valid fd on success.
  * @retval Returns -1 on failure.
  */
-int	open_map(char *file_name)
+int	open_map_file(char *file_name)
 {
 	int	fd;
 
 	fd = open(file_name, O_DIRECTORY);
 	if (fd != -1)
-	{
-		close(fd);
-		fd = -1;
-	}
-	else if (access(file_name, R_OK) == 0)
+		return (close(fd), ft_putendl_fd("Failed to open map.", ERR_FD), -1);
+	if (access(file_name, R_OK) == 0)
 		fd = open(file_name, O_RDONLY);
-	else
-		fd = -1;
 	if (fd == -1)
-	{
-		if (errno == ENOENT)
-			ft_putstr_fd("File not found: ", STDERR_FILENO);
-		else if (errno == EACCES)
-			ft_putstr_fd("Permission denied: ", STDERR_FILENO);
-		else
-			ft_putstr_fd("Could not read data: ", STDERR_FILENO);
-		ft_putendl_fd(file_name, STDERR_FILENO);
-		exit (EXIT_FAILURE);
-	}
+		ft_putendl_fd("Failed to open map.", ERR_FD);
 	return (fd);
 }
 
@@ -63,7 +49,7 @@ t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
 	char	*line;
 	t_list	*new_line;
 
-	map_fd = open_map(map_file);
+	map_fd = open_map_file(map_file);
 	if (map_fd == -1)
 		return (NULL);
 	line = get_next_line(map_fd);
@@ -155,7 +141,7 @@ void	index_map(t_dot **map, t_data *data)
  * @retval NULL on failure.
  * @retval The map on success.
  */
-t_dot	**buil_map_arrays(char *map_file, t_data *data)
+t_dot	**build_map_arrays(char *map_file, t_data *data)
 {
 	int		map_x;
 	int		map_y;

@@ -1,0 +1,10 @@
+outputs:
+	2d array of dots
+	x_size
+	y_size
+	z_max
+dots:
+	x
+	y
+	z
+	color

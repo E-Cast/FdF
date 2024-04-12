@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 04:23:49 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 05:37:37 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,10 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	data = init_data(argc, argv);
-	map = buil_map_arrays(argv[1], &data);
+	map = build_map_arrays(argv[1], &data);
 	if (map == NULL)
 		return (ft_putendl_fd("Failed to read map.", STDERR_FILENO), 1);
+	printf("%li\n", data.max_z);
 	// print_map(map);
 	test(data, map);
 	free_map(map, 0);

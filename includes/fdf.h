@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 04:07:55 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:51:24 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 # include <math.h>
 # include <MLX42/MLX42.h>
 # include "libft.h"
+
+# ifndef ERR_FD
+#  define ERR_FD STDERR_FILENO
+# endif
 
 # ifndef XY_SCALE
 #  define XY_SCALE 20
@@ -40,11 +44,11 @@ typedef struct s_data
 {
 	ssize_t	xy_scale;
 	ssize_t	z_scale;
-	ssize_t	def_color;
+	ssize_t def_color;
+	float	angle;
 	ssize_t	max_x;
 	ssize_t	max_y;
 	ssize_t	max_z;
-	float	angle;
 }	t_data;
 
 typedef struct s_dot
@@ -53,15 +57,14 @@ typedef struct s_dot
 	ssize_t	y;
 	ssize_t	z;
 	ssize_t	color;
-	bool	last;
 }	t_dot;
 
 // map.c
 
-int		open_map(char *file_name);
+int		open_map_file(char *file_name);
 t_list	**read_map(char *map_file, t_list **lines, int *x, int *y);
 t_dot	*line_to_dots(char *line, int map_x, t_data *data);
-t_dot	**buil_map_arrays(char *map_file, t_data *data);
+t_dot	**build_map_arrays(char *map_file, t_data *data);
 
 // util.c
 
