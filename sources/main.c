@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 23:36:41 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 00:27:49 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static t_data	init_data(int argc, char **argv)
 	data.xy_scale = XY_SCALE;
 	data.z_scale = Z_SCALE;
 	data.def_color = DEF_COLOR;
+	data.angle = 0.523599;//
 	if (argc >= 3)
 		data.xy_scale = ft_atoi(argv[2]);
 	if (argc >= 4)
@@ -60,9 +61,15 @@ void	test_draw_dots(t_data data, t_dot **map, mlx_image_t *img)
 		x_index = 0;
 		while (x_index < data.max_x)
 		{
-			x_pos = (x_index + 1) * data.xy_scale;
-			y_pos = (y_index + 1) * data.xy_scale;
-			mlx_put_pixel(img, x_pos, y_pos, map[y_index][x_index].color);
+			// x_pos = (x_index * data.xy_scale) * cos(data.angle) + (y_index * data.xy_scale) * cos(data.angle + 2) + (map[y_index][x_index].z * data.z_scale) * cos(data.angle - 2);
+			// y_pos = (x_index * data.xy_scale) * sin(data.angle) + (y_index * data.xy_scale) * sin(data.angle + 2) + (map[y_index][x_index].z * data.z_scale) * sin(data.angle - 2);
+			// // x_pos = (x_index + 1) * data.xy_scale;
+			// // y_pos = (y_index + 1) * data.xy_scale;
+			x_pos = ((x_index + 1) * data.xy_scale - (y_index + 1) * data.xy_scale) * cos(data.angle);
+ 			y_pos = ((x_index + 1) * data.xy_scale +  (y_index + 1) * data.xy_scale) * sin(data.angle) - map[y_index][x_index].z * data.z_scale;
+			printf("x:%i\ny:%i\nx_pos:%i\ny_pos:%i\n\n", x_index + 1, y_index + 1, x_pos + 200, y_pos + 100);
+			// if (x_pos > 0 && y_pos > 0)
+				mlx_put_pixel(img, x_pos + 290, y_pos + 100, map[y_index][x_index].color);
 			x_index++;
 		}
 		y_index++;
@@ -79,10 +86,10 @@ void	test(t_data data, t_dot **map)
 	width = data.max_x * data.xy_scale + data.xy_scale;
 	height = data.max_y * data.xy_scale + data.xy_scale;
 	printf("%li\n%li\n", width, height);
-	mlx = mlx_init(width, height, "Test", true);
+	mlx = mlx_init(width + 300, height + 230, "Test", true);
 	if (!mlx)
 		return ;
-	img = mlx_new_image(mlx, width, height);
+	img = mlx_new_image(mlx, width + 300, width + 230);
 	if (!img)
 		return ;
 	if (mlx_image_to_window(mlx, img, 0, 0) < 0)
