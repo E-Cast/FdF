@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 23:23:07 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 04:07:55 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,38 @@
 # include "libft.h"
 
 # ifndef XY_SCALE
-#  define XY_SCALE 10
+#  define XY_SCALE 20
 # endif
 
 # ifndef Z_SCALE
-#  define Z_SCALE 10
+#  define Z_SCALE 7
 # endif
 
 # ifndef DEF_COLOR
 #  define DEF_COLOR 0xFFFFFFFF
 # endif
 
+# ifndef DEF_ANGLE
+#  define DEF_ANGLE 0.523599
+# endif
+
 typedef struct s_data
 {
-	int		xy_scale;
-	int		z_scale;
-	size_t	def_color;
-	int		max_x;
-	int		max_y;
+	ssize_t	xy_scale;
+	ssize_t	z_scale;
+	ssize_t	def_color;
+	ssize_t	max_x;
+	ssize_t	max_y;
+	ssize_t	max_z;
 	float	angle;
 }	t_data;
 
 typedef struct s_dot
 {
-	int		z;
-	size_t	color;
+	ssize_t	x;
+	ssize_t	y;
+	ssize_t	z;
+	ssize_t	color;
 	bool	last;
 }	t_dot;
 
@@ -53,7 +60,7 @@ typedef struct s_dot
 
 int		open_map(char *file_name);
 t_list	**read_map(char *map_file, t_list **lines, int *x, int *y);
-t_dot	*line_to_dots(char *line, int map_x, size_t	color);
+t_dot	*line_to_dots(char *line, int map_x, t_data *data);
 t_dot	**buil_map_arrays(char *map_file, t_data *data);
 
 // util.c

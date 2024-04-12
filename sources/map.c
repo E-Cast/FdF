@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/11 23:12:19 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 04:08:37 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
  * 
  * @param line Str to extract the dots from.
  * @param map_x Size of the array to create.
- * @param color Default color for dots.
+ * @param data General fdf data.
  * @retval NULL On failure.
  * @retval On success an array of size x containing dots.
  */
-t_dot	*line_to_dots(char *line, int map_x, size_t	color)
+t_dot	*line_to_dots(char *line, int map_x, t_data *data)
 {
 	t_dot	*map_line;
 	int		map_inx;
@@ -107,10 +107,12 @@ t_dot	*line_to_dots(char *line, int map_x, size_t	color)
 	while (line[inx] && map_inx < map_x)
 	{
 		map_line[map_inx].z = fdf_atoi(line, &inx);
+		if (map_line[map_inx].z > data->max_z)
+			data->max_z = map_line[map_inx].z;
 		if (line[inx] == ',')
 			map_line[map_inx].color = my_atoh(&line[inx + 1]);
 		else
-			map_line[map_inx].color = color;
+			map_line[map_inx].color = data->def_color;
 		while (line[inx] && my_isspace(line[inx]) == 0)
 			inx++;
 		while (line[inx] && my_isspace(line[inx]) != 0)
@@ -118,6 +120,31 @@ t_dot	*line_to_dots(char *line, int map_x, size_t	color)
 		map_inx++;
 	}
 	return (map_line);
+}
+
+/**
+ * @brief 
+ * 
+ * @param map 
+ * @param data 
+ */
+void	index_map(t_dot **map, t_data *data)
+{
+	ssize_t	y;
+	ssize_t	x;
+
+	y = 0;
+	while (y < data->max_y)
+	{
+		x = 0;
+		while (x < data->max_x)//
+		{
+			map[y][x].x = x + 1;
+			map[y][x].y = y + 1;
+			x++;
+		}
+		y++;
+	}
 }
 
 /**
@@ -148,11 +175,10 @@ t_dot	**buil_map_arrays(char *map_file, t_data *data)
 	while (map_y > 0)
 	{
 		map_y--;
-		map[map_y] = line_to_dots(ft_lstlast(lines)->content,
-				map_x, data->def_color);
+		map[map_y] = line_to_dots(ft_lstlast(lines)->content, map_x, data);
 		if (map[map_y] == NULL)
 			return (free_map(map, map_y + 1), ft_lstclear(&lines, free), NULL);
 		my_lstdellast(&lines, free);
 	}
-	return (map);
+	return (index_map(map, data), map);
 }
