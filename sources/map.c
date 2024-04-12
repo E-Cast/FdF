@@ -6,109 +6,48 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 17:58:43 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 18:17:38 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 /**
- * @brief Opens the file containing the map.
+ * @brief Reads every line from the map and returns them in a linked list.
  * 
- * @param file_name Name of the file to be opened.
- * @retval Returns a valid fd on success.
- * @retval Returns -1 on failure.
+ * @param map_file File containing the map.
+ * @param lines 
+ * @param x Size x of the map.
+ * @param y Size y of the map.
+ * @retval NULL On failure.
+ * @retval A pointer to the linked list containing every lines from the map.
  */
-int	open_map_file(char *file_name)
+t_list	*read_map(char *file_name)
 {
-	int	fd;
+	int		fd;
+	t_list	*lines;
+	char	*gnl_line;
+	t_list	*new_line;
 
 	fd = open(file_name, O_DIRECTORY);
 	if (fd != -1)
-		return (close(fd), ft_putendl_fd("Failed to open map.", ERR_FD), -1);
+		return (close(fd), ft_putendl_fd("Failed to open map.", ERR_FD), NULL);
 	if (access(file_name, R_OK) == 0)
 		fd = open(file_name, O_RDONLY);
 	if (fd == -1)
-		ft_putendl_fd("Failed to open map.", ERR_FD);
-	return (fd);
-}
-
-/**
- * @brief Reads every line from the map and returns them in a linked list.
- * 
- * @param map_file File containing the map.
- * @param lines 
- * @param x Size x of the map.
- * @param y Size y of the map.
- * @retval NULL On failure.
- * @retval A pointer to the linked list containing every lines from the map.
- */
-t_list	**read_map(char *file_name, t_list **lines, int *x, int *y)
-{
-	int	fd;//
-	char	*line;////
-	t_list	*new_line;////
-
-	fd = open(file_name, O_DIRECTORY);//
-	if (fd != -1)//
-		return (close(fd), ft_putendl_fd("Failed to open map.", ERR_FD), NULL);//
-	if (access(file_name, R_OK) == 0)//
-		fd = open(file_name, O_RDONLY);//
-	if (fd == -1)//
-		return (ft_putendl_fd("Failed to open map.", ERR_FD), NULL);//
-	line = get_next_line(fd);////
-	while (line != NULL)////
+		return (ft_putendl_fd("Failed to open map.", ERR_FD), NULL);
+	lines = NULL;
+	gnl_line = get_next_line(fd);
+	while (gnl_line)
 	{
-		if (*x == 0)
-			*x = find_x(line);
-		else if (*x != find_x(line))
-			return (ft_lstclear(lines, free), free(line), close(fd), NULL);
-		(*y)++;
-		new_line = ft_lstnew(line);////
-		if (new_line == NULL)////
-			return (ft_lstclear(lines, free), free(line), close(fd), NULL);////
-		ft_lstadd_back(lines, new_line);////
-		line = get_next_line(fd);////
+		new_line = ft_lstnew(gnl_line);
+		if (new_line == NULL)
+			return (ft_lstclear(&lines, free), free(gnl_line), close(fd), NULL);
+		ft_lstadd_back(&lines, new_line);
+		gnl_line = get_next_line(fd);
 	}
-	return (close(fd), lines);////
+	return (close(fd), lines);
 }
-
-/**
- * @brief Reads every line from the map and returns them in a linked list.
- * 
- * @param map_file File containing the map.
- * @param lines 
- * @param x Size x of the map.
- * @param y Size y of the map.
- * @retval NULL On failure.
- * @retval A pointer to the linked list containing every lines from the map.
- */
-// t_list	**read_map(char *map_file, t_list **lines, int *x, int *y)
-// {
-// 	int		map_fd;
-// 	char	*line;
-// 	t_list	*new_line;
-
-// 	map_fd = open_map_file(map_file);
-// 	if (map_fd == -1)
-// 		return (NULL);
-// 	line = get_next_line(map_fd);
-// 	while (line != NULL)
-// 	{
-// 		if (*x == 0)
-// 			*x = find_x(line);
-// 		else if (*x != find_x(line))
-// 			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
-// 		(*y)++;
-// 		new_line = ft_lstnew(line);
-// 		if (new_line == NULL)
-// 			return (ft_lstclear(lines, free), free(line), close(map_fd), NULL);
-// 		ft_lstadd_back(lines, new_line);
-// 		line = get_next_line(map_fd);
-// 	}
-// 	close(map_fd);
-// 	return (lines);
-// }
 
 /**
  * @brief Creates an array of size x containing dots from the provided line.
@@ -190,9 +129,11 @@ t_dot	**build_map_arrays(char *map_file, t_data *data)
 
 	map_x = 0;
 	map_y = 0;
-	lines = NULL;
-	if (read_map(map_file, &lines, &map_x, &map_y) == NULL)
+	lines = read_map(map_file);
+	if (lines == NULL)
 		return (NULL);
+	map_x = 19;//
+	map_y = 11;//
 	data->max_x = map_x;
 	data->max_y = map_y;
 	map = ft_calloc(map_y + 1, sizeof(t_dot *));

@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 17:51:24 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/12 18:16:56 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_dot
 // map.c
 
 int		open_map_file(char *file_name);
-t_list	**read_map(char *map_file, t_list **lines, int *x, int *y);
+t_list	*read_map(char *map_file);
 t_dot	*line_to_dots(char *line, int map_x, t_data *data);
 t_dot	**build_map_arrays(char *map_file, t_data *data);
 
