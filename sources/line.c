@@ -6,42 +6,11 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 03:29:38 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 10:27:08 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 19:09:59 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-float	get_fraction(float x1, float x2, float x)
-{
-	if (x1 != x2)
-		return ((x - x1) / (x2 - x1));
-	return (0);//
-}
-
-size_t	gradient(t_dot index, t_dot strt, t_dot dest)
-{
-	int		dx;
-	int		dy;
-	float	fraction;
-	int		rgba[4];
-
-	dx = dest.x - strt.sx;//
-	dy = dest.y - strt.sy;
-	if (abs(dx) > abs(dy))
-		fraction = get_fraction(strt.sx, dest.sx, index.sx);
-	else
-		fraction = get_fraction(strt.sy, dest.sy, index.sy);
-	rgba[0] = (strt.color >> 24 & 0xFF) + ((dest.color >> 24 & 0xFF)
-			- (strt.color >> 24 & 0xFF)) * fraction;
-	rgba[1] = (strt.color >> 16 & 0xFF) + ((dest.color >> 16 & 0xFF)
-			- (strt.color >> 16 & 0xFF)) * fraction;
-	rgba[2] = (strt.color >> 8 & 0xFF) + ((dest.color >> 8 & 0xFF)
-			- (strt.color >> 8 & 0xFF)) * fraction;
-	rgba[3] = (strt.color & 0xFF) + ((dest.color & 0xFF)
-			- (strt.color & 0xFF)) * fraction;
-	return (rgba[0] << 24 | rgba[1] << 16 | rgba[2] << 8 | rgba[3]);
-}
 
 /**
  * @brief Draws a horizontally inclined line of pixels
