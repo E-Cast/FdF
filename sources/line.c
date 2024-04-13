@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 03:29:38 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 09:37:17 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 09:54:57 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,14 @@ void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param fdf 
+ * @param index 
+ * @param start 
+ * @param dest 
+ */
 void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 {
 	int	dx;
