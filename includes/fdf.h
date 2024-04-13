@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 04:03:53 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 10:24:30 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_modifiers
 	float	angle;
 }	t_mods;
 
-/*Map functions*/
+/*Map functions.*/
 
 # ifndef O_DIRECTORY //test without it on mac.
 #  define O_DIRECTORY	00200000
@@ -76,7 +76,12 @@ t_dot	**line_to_dots(char *line, int y, size_t color);
 t_dot	***build_map(char *map_file, size_t color);
 void	free_map(t_dot	***map);
 
-void	draw_line(mlx_image_t *fdf, t_dot *d1, t_dot *d2);
+/*Drawing functions.*/
+
+void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
+void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
+void	draw_line(mlx_image_t *fdf, t_dot *start, t_dot *dest);
+
 int		mlx_start(t_dot ***map, t_mods *mods);
 
 #endif

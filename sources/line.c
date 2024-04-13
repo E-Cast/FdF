@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 03:29:38 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 09:54:57 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 10:27:08 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ float	get_fraction(float x1, float x2, float x)
 {
 	if (x1 != x2)
 		return ((x - x1) / (x2 - x1));
-	return (0);
+	return (0);//
 }
 
 size_t	gradient(t_dot index, t_dot strt, t_dot dest)
@@ -26,7 +26,7 @@ size_t	gradient(t_dot index, t_dot strt, t_dot dest)
 	float	fraction;
 	int		rgba[4];
 
-	dx = dest.x - strt.sx;
+	dx = dest.x - strt.sx;//
 	dy = dest.y - strt.sy;
 	if (abs(dx) > abs(dy))
 		fraction = get_fraction(strt.sx, dest.sx, index.sx);
@@ -43,6 +43,15 @@ size_t	gradient(t_dot index, t_dot strt, t_dot dest)
 	return (rgba[0] << 24 | rgba[1] << 16 | rgba[2] << 8 | rgba[3]);
 }
 
+/**
+ * @brief Draws a horizontally inclined line of pixels
+ *  connecting the start and dest dots.
+ * 
+ * @param fdf Image to draw the pixels on.
+ * @param index Dot struct used as index.
+ * @param start Starting dot.
+ * @param dest Destination dot.
+ */
 void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 {
 	int		dx;
@@ -70,12 +79,13 @@ void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 }
 
 /**
- * @brief 
+ * @brief Draws a vertically inclined line of pixels
+ *  connecting the start and dest dots.
  * 
- * @param fdf 
- * @param index 
- * @param start 
- * @param dest 
+ * @param fdf Image to draw the pixels on.
+ * @param index Dot struct used as index.
+ * @param start Starting dot.
+ * @param dest Destination dot.
  */
 void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 {
@@ -104,7 +114,7 @@ void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 }
 
 /**
- * @brief Draw a line of pixels connecting start and dest.
+ * @brief Draws a line of pixels connecting start and dest.
  * 
  * @param fdf Image to draw the pixels on.
  * @param start Starting dot.
