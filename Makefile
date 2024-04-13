@@ -1,4 +1,5 @@
-SRC				=	line.c \
+SRC				=	gradient.c \
+					line.c \
 					main.c \
 					map.c \
 					mlx.c \

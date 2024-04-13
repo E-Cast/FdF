@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 10:24:30 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 19:11:01 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
 void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
 void	draw_line(mlx_image_t *fdf, t_dot *start, t_dot *dest);
 
+size_t	gradient(t_dot index, t_dot strt, t_dot dest);
 int		mlx_start(t_dot ***map, t_mods *mods);
 
 #endif
