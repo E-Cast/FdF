@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 18:16:56 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 04:03:53 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,8 @@
 # include <fcntl.h>
 # include <math.h>
 # include <MLX42/MLX42.h>
+# include <MLX42/MLX42_Int.h>
 # include "libft.h"
-
-# ifndef ERR_FD
-#  define ERR_FD STDERR_FILENO
-# endif
 
 # ifndef XY_SCALE
 #  define XY_SCALE 20
@@ -32,45 +29,54 @@
 #  define Z_SCALE 7
 # endif
 
-# ifndef DEF_COLOR
-#  define DEF_COLOR 0xFFFFFFFF
+# ifndef DEFAULT_COLOR
+#  define DEFAULT_COLOR 0xFFFFFFFF
 # endif
 
-# ifndef DEF_ANGLE
-#  define DEF_ANGLE 0.523599
+# ifndef DEFAULT_WIDTH
+#  define DEFAULT_WIDTH 1280
 # endif
 
-typedef struct s_data
-{
-	ssize_t	xy_scale;
-	ssize_t	z_scale;
-	ssize_t def_color;
-	float	angle;
-	ssize_t	max_x;
-	ssize_t	max_y;
-	ssize_t	max_z;
-}	t_data;
+# ifndef DEFAULT_HEIGHT
+#  define DEFAULT_HEIGHT 720
+# endif
+
+# ifndef DEFAULT_ANGLE
+#  define DEFAULT_ANGLE 0.523599
+# endif
 
 typedef struct s_dot
 {
-	ssize_t	x;
-	ssize_t	y;
-	ssize_t	z;
-	ssize_t	color;
+	int		x;
+	int		y;
+	int		z;
+	size_t	color;
+	int		sx;
+	int		sy;
 }	t_dot;
 
-// map.c
+typedef struct s_modifiers
+{
+	int		xy_scale;
+	int		z_scale;
+	int		window_width;
+	int		window_height;
+	float	angle;
+}	t_mods;
 
-int		open_map_file(char *file_name);
+/*Map functions*/
+
+# ifndef O_DIRECTORY //test without it on mac.
+#  define O_DIRECTORY	00200000
+# endif
+
 t_list	*read_map(char *map_file);
-t_dot	*line_to_dots(char *line, int map_x, t_data *data);
-t_dot	**build_map_arrays(char *map_file, t_data *data);
+t_dot	*make_dot(char *raw_dot, int x, int y, size_t default_color);
+t_dot	**line_to_dots(char *line, int y, size_t color);
+t_dot	***build_map(char *map_file, size_t color);
+void	free_map(t_dot	***map);
 
-// util.c
+void	draw_line(mlx_image_t *fdf, t_dot *d1, t_dot *d2);
+int		mlx_start(t_dot ***map, t_mods *mods);
 
-int		find_x(char *line);
-int		fdf_atoi(const char *str, int *index);
-void	free_map(t_dot	**map, int index);
-
-t_dot	*make_new_dot(char *raw_data, int x, int y);
 #endif

@@ -1,6 +1,7 @@
-SRC				=	main.c \
+SRC				=	line.c \
+					main.c \
 					map.c \
-					util.c
+					mlx.c \
 
 SRC_DIR			:=	sources/
 OBJ_DIR			:=	objects/
