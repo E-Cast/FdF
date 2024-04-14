@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 19:10:00 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 23:37:52 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 23:56:39 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,77 +46,48 @@ float	get_ratio(t_dot index, t_dot start, t_dot dest)
 	return (mix);
 }
 
-float	linear_interpolation(float a, float b, float mix)
-{
-	return (a * (1 - mix) + b * mix);
-}
-
 void	prep_color(int *rgb, float *res)
 {
-	//normalization
-	res[0] = rgb[0] / 255.0f;
-	//sRGBInverseCompanding
-	if (res[0] <= 0.04045)
-		res[0] = res[0] / 12.92;
-	else
-		res[0] = pow((res[0] + 0.055) / 1.055, 2.4);
-	res[1] = rgb[1] / 255.0f;
-	if (res[1] <= 0.04045)
-		res[1] = res[1] / 12.92;
-	else
-		res[1] = pow((res[1] + 0.055) / 1.055, 2.4);
-	res[2] = rgb[2] / 255.0f;
-	if (res[2] <= 0.04045)
-		res[2] = res[2] / 12.92;
-	else
-		res[2] = pow((res[2] + 0.055) / 1.055, 2.4);
+	res[0] = norm(rgb[0]);
+	res[0] = i_comp(res[0]);
+	res[1] = norm(rgb[1]);
+	res[1] = i_comp(res[1]);
+	res[2] = norm(rgb[2]);
+	res[2] = i_comp(res[2]);
 }
 
 // Function to apply sRGB companding
-void sRGBCompanding(float r, float g, float b, int *r1, int *g1, int *b1) {
-	if (r <= 0.0031308)
-		*r1 = (r * 12.92) * 255;
-	else
-		*r1 = (1.055 * pow(r, 1 / 2.4) - 0.055) * 255;
-
-	if (g <= 0.0031308)
-		*g1 = (g * 12.92) * 255;
-	else
-		*g1 = (1.055 * pow(g, 1 / 2.4) - 0.055) * 255;
-
-	if (b <= 0.0031308)
-		*b1 = (b * 12.92) * 255;
-	else
-		*b1 = (1.055 * pow(b, 1 / 2.4) - 0.055) * 255;
+void	sRGBCompanding(float *rgb, int *res)
+{
+	res[0] = comp(rgb[0]);
+	res[1] = comp(rgb[1]);
+	res[2] = comp(rgb[2]);
 }
 
 // Main MarkMix function
 void	mark_mix(int *rgb1, int *rgb2, float mix, int *result)
 {
-	float	norm1[3];
-	float	norm2[3];
+	float	n1[3];
+	float	n2[3];
 	float	rgb[3];
-	float	brightness[3];
-	float	intensity;
+	float	brightness;
 	float	factor;
 
-	prep_color(rgb1, norm1);
-	prep_color(rgb2, norm2);
-	rgb[0] = linear_interpolation(norm1[0], norm2[0], mix);
-	rgb[1] = linear_interpolation(norm1[1], norm2[1], mix);
-	rgb[2] = linear_interpolation(norm1[2], norm2[2], mix);
-	brightness[1] = pow(norm1[0] + norm1[1] + norm1[2], GAMMA);
-	brightness[2] = pow(norm2[0] + norm2[1] + norm2[2], GAMMA);
-	brightness[0] = linear_interpolation(brightness[1], brightness[2], mix);
-	intensity = pow(brightness[0], 1 / GAMMA);
+	prep_color(rgb1, n1);
+	prep_color(rgb2, n2);
+	rgb[0] = intrp(n1[0], n2[0], mix);
+	rgb[1] = intrp(n1[1], n2[1], mix);
+	rgb[2] = intrp(n1[2], n2[2], mix);
+	brightness = intrp(pow(n1[0] + n1[1] + n1[2], GAMMA),
+			pow(n2[0] + n2[1] + n2[2], GAMMA), mix);
 	if ((rgb[0] + rgb[1] + rgb[2]) != 0)
 	{
-		factor = intensity / (rgb[0] + rgb[1] + rgb[2]);
+		factor = pow(brightness, 1 / GAMMA) / (rgb[0] + rgb[1] + rgb[2]);
 		rgb[0] *= factor;
 		rgb[1] *= factor;
 		rgb[2] *= factor;
 	}
-	sRGBCompanding(rgb[0], rgb[1], rgb[2], &result[0], &result[1], &result[2]);
+	sRGBCompanding(rgb, result);
 }
 
 size_t	gradient(t_dot index, t_dot start, t_dot dest)
