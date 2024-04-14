@@ -1,4 +1,5 @@
-SRC				=	gradient.c \
+SRC				=	color_ops.c \
+					gradient.c \
 					line.c \
 					main.c \
 					map.c \

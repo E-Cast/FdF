@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 01:11:21 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 05:38:05 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 23:18:35 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	mlx_start(t_dot ***map, t_mods *mods)
 	int			fdf_width;
 	int			ui_width;
 
-	mlx_set_setting(MLX_STRETCH_IMAGE, true);
+	mlx_set_setting(MLX_STRETCH_IMAGE, false);
 	fdf_width = mods->window_width / 100 * 80;
 	ui_width = mods->window_width - fdf_width;
 	mlx = mlx_init(mods->window_width, mods->window_height, "FdF", true);

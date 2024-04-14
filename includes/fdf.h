@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 22:26:17 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 23:45:44 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,6 @@
 #  define DEFAULT_ANGLE 0.523599
 # endif
 
-# ifndef GAMMA
-#  define GAMMA 0.43
-# endif
-
 typedef struct s_dot
 {
 	int		x;
@@ -80,11 +76,22 @@ t_dot	**line_to_dots(char *line, int y, size_t color);
 t_dot	***build_map(char *map_file, size_t color);
 void	free_map(t_dot	***map);
 
-/*Drawing functions.*/
+/*Line drawing functions.*/
 
 void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
 void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
 void	draw_line(mlx_image_t *fdf, t_dot *start, t_dot *dest);
+
+/*Color functions.*/
+
+# ifndef GAMMA
+#  define GAMMA 0.43
+# endif
+
+float	norm(int n);
+float	intrp(float a, float b, float mix);
+float	i_comp(float f);
+int		comp(float f);
 
 size_t	gradient(t_dot index, t_dot strt, t_dot dest);
 int		mlx_start(t_dot ***map, t_mods *mods);
