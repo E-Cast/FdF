@@ -6,15 +6,14 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 19:10:00 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/14 00:12:42 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/14 00:32:54 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 /**
- * @brief Calculates how far index is between start 
- * and end and how to mix the colors accordingly.
+ * @brief Calculates how far index is between start and end.
  * 
  * @param start Start position.
  * @param end Destination position.
@@ -46,57 +45,39 @@ float	get_ratio(t_dot index, t_dot start, t_dot dest)
 	return (mix);
 }
 
-void	prep_color(int *rgb, float *res)
+void	hex_to_rgba(int hex, float *rgba)
 {
-	res[0] = i_comp(norm(rgb[0]));
-	res[1] = i_comp(norm(rgb[1]));
-	res[2] = i_comp(norm(rgb[2]));
-}
-
-// Main MarkMix function
-int	mark_mix(int *rgb1, int *rgb2, float mix)
-{
-	float	tmp1[3];
-	float	tmp2[3];
-	float	rgba[4];
-	float	brightness;
-	float	factor;
-
-	prep_color(rgb1, tmp1);
-	prep_color(rgb2, tmp2);
-	rgba[0] = intrp(tmp1[0], tmp2[0], mix);
-	rgba[1] = intrp(tmp1[1], tmp2[1], mix);
-	rgba[2] = intrp(tmp1[2], tmp2[2], mix);
-	brightness = intrp(pow(tmp1[0] + tmp1[1] + tmp1[2], GAMMA),
-			pow(tmp2[0] + tmp2[1] + tmp2[2], GAMMA), mix);
-	if ((rgba[0] + rgba[1] + rgba[2]) != 0)
-	{
-		factor = pow(brightness, 1 / GAMMA) / (rgba[0] + rgba[1] + rgba[2]);
-		rgba[0] *= factor;
-		rgba[1] *= factor;
-		rgba[2] *= factor;
-	}
-	rgba[3] = rgb1[3] + (rgb2[3] - rgb1[3]) * mix;
-	return (comp(rgba[0]) << 24 | comp(rgba[1]) << 16
-		| comp(rgba[2]) << 8 | (int)rgba[3]);
-}
-
-void	hex_to_rgba(int hex, int *rgba)
-{
-	rgba[0] = ((hex >> 24) & 0xFF);
-	rgba[1] = ((hex >> 16) & 0xFF);
-	rgba[2] = ((hex >> 8) & 0xFF);
+	rgba[0] = i_comp(norm(((hex >> 24) & 0xFF)));
+	rgba[1] = i_comp(norm(((hex >> 16) & 0xFF)));
+	rgba[2] = i_comp(norm(((hex >> 8) & 0xFF)));
 	rgba[3] = (hex & 0xFF);
 }
 
+// MarkMix function
 int	gradient(t_dot index, t_dot start, t_dot dest)
 {
-	int		rgba1[4];
-	int		rgba2[4];
 	float	mix;
+	float	s_rgba[4];
+	float	d_rgba[4];
+	float	i_rgba[4];
+	float	brightness;
 
-	hex_to_rgba(start.color, rgba1);
-	hex_to_rgba(dest.color, rgba2);
 	mix = get_ratio(index, start, dest);
-	return (mark_mix(rgba1, rgba2, mix));
+	hex_to_rgba(start.color, s_rgba);
+	hex_to_rgba(dest.color, d_rgba);
+	i_rgba[3] = s_rgba[3] + (d_rgba[3] - s_rgba[3]) * mix;
+	i_rgba[0] = intrp(s_rgba[0], d_rgba[0], mix);
+	i_rgba[1] = intrp(s_rgba[1], d_rgba[1], mix);
+	i_rgba[2] = intrp(s_rgba[2], d_rgba[2], mix);
+	brightness = intrp(pow(s_rgba[0] + s_rgba[1] + s_rgba[2], GAMMA),
+			pow(d_rgba[0] + d_rgba[1] + d_rgba[2], GAMMA), mix);
+	if ((i_rgba[0] + i_rgba[1] + i_rgba[2]) != 0)
+	{
+		mix = pow(brightness, 1 / GAMMA) / (i_rgba[0] + i_rgba[1] + i_rgba[2]);
+		i_rgba[0] *= mix;
+		i_rgba[1] *= mix;
+		i_rgba[2] *= mix;
+	}
+	return (comp(i_rgba[0]) << 24 | comp(i_rgba[1]) << 16
+		| comp(i_rgba[2]) << 8 | (int)i_rgba[3]);
 }
