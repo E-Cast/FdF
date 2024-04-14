@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 03:29:38 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 19:09:59 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:57:04 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,32 @@ void	draw_line(mlx_image_t *fdf, t_dot *start, t_dot *dest)
 			high_slope(fdf, *dest, *dest, *start);
 		else
 			high_slope(fdf, *start, *start, *dest);
+	}
+}
+
+/**
+ * @brief Draws lines connecting every dot by using the draw_line function.
+ * 
+ * @param fdf Image to draw the pixels on.
+ * @param map 2D array containing every dot.
+ */
+void	draw_all(mlx_image_t *fdf, t_dot ***map)
+{
+	int	x_indx;
+	int	y_indx;
+
+	y_indx = 0;
+	while (map[y_indx])
+	{
+		x_indx = 0;
+		while (map[y_indx][x_indx])
+		{
+			if (map[y_indx][x_indx + 1])
+				draw_line(fdf, map[y_indx][x_indx], map[y_indx][x_indx + 1]);
+			if (map[y_indx + 1])
+				draw_line(fdf, map[y_indx + 1][x_indx], map[y_indx][x_indx]);
+			x_indx++;
+		}
+		y_indx++;
 	}
 }

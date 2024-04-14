@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 01:11:21 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 23:18:35 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:57:20 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,26 @@ mlx_image_t	*make_image(mlx_t *mlx, int width, int height, int start)
 	return (fdf);
 }
 
-void	draw_all(t_dot ***map, mlx_image_t *fdf)
-{
-	int		x_indx;
-	int		y_indx;
+// void	draw_all(t_dot ***map, mlx_image_t *fdf)
+// {
+// 	int		x_indx;
+// 	int		y_indx;
 
-	y_indx = 0;
-	while (map[y_indx])
-	{
-		x_indx = 0;
-		while (map[y_indx][x_indx])
-		{
-			if (map[y_indx][x_indx + 1])
-				draw_line(fdf, map[y_indx][x_indx], map[y_indx][x_indx + 1]);
-			if (map[y_indx + 1])
-				draw_line(fdf, map[y_indx + 1][x_indx], map[y_indx][x_indx]);
-			x_indx++;
-		}
-		y_indx++;
-	}
-}
+// 	y_indx = 0;
+// 	while (map[y_indx])
+// 	{
+// 		x_indx = 0;
+// 		while (map[y_indx][x_indx])
+// 		{
+// 			if (map[y_indx][x_indx + 1])
+// 				draw_line(fdf, map[y_indx][x_indx], map[y_indx][x_indx + 1]);
+// 			if (map[y_indx + 1])
+// 				draw_line(fdf, map[y_indx + 1][x_indx], map[y_indx][x_indx]);
+// 			x_indx++;
+// 		}
+// 		y_indx++;
+// 	}
+// }
 
 int	mlx_start(t_dot ***map, t_mods *mods)
 {
@@ -66,7 +66,7 @@ int	mlx_start(t_dot ***map, t_mods *mods)
 	if (!ui_img)
 		return (EXIT_FAILURE);
 	ft_memset(ui_img->pixels, 150, ui_width * mods->window_height * sizeof(int));
-	draw_all(map, fdf_img);
+	draw_all(fdf_img, map);
 	mlx_loop(mlx);
 	mlx_delete_image(mlx, fdf_img);
 	mlx_delete_image(mlx, ui_img);
