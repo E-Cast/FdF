@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/14 00:09:53 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:07:26 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,10 @@ float	norm(int n);
 float	intrp(float a, float b, float mix);
 float	i_comp(float f);
 int		comp(float f);
+float	get_ratio(t_dot index, t_dot start, t_dot dest);
+void	rgb_to_linear(int hex, float *rgba);
+int		gradient(t_dot index, t_dot start, t_dot dest);
 
-int		gradient(t_dot index, t_dot strt, t_dot dest);
 int		mlx_start(t_dot ***map, t_mods *mods);
 
 #endif
