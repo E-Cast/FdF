@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 19:10:00 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 22:27:36 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:34:34 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,6 @@ void sRGBCompanding(float r, float g, float b, uint8_t *r1, uint8_t *g1, uint8_t
 		*b1 = (1.055 * pow(b, 1 / 2.4) - 0.055) * 255;
 }
 
-// Function to make a color from RGB values
-void MakeColor(float r, float g, float b, uint8_t *r1, uint8_t *g1, uint8_t *b1) {
-	*r1 = r * 255;
-	*g1 = g * 255;
-	*b1 = b * 255;
-}
-
 // Main MarkMix function
 void MarkMix(uint8_t *rgb1, uint8_t *rgb2, float mix, uint8_t *result)
 {
@@ -168,18 +161,21 @@ void MarkMix(uint8_t *rgb1, uint8_t *rgb2, float mix, uint8_t *result)
 
 size_t	gradient(t_dot index, t_dot start, t_dot dest)
 {
-	uint8_t	rgb1[3];
-	uint8_t	rgb2[3];
+	uint8_t	rgb1[4];
+	uint8_t	rgb2[4];
 	float	mix;
-	uint8_t	result[3];
+	uint8_t	result[4];
 
 	rgb1[0] = ((start.color >> 24) & 0xFF);
 	rgb1[1] = ((start.color >> 16) & 0xFF);
 	rgb1[2] = ((start.color >> 8) & 0xFF);
+	rgb1[3] = (start.color & 0xFF);
 	rgb2[0] = ((dest.color >> 24) & 0xFF);
 	rgb2[1] = ((dest.color >> 16) & 0xFF);
 	rgb2[2] = ((dest.color >> 8) & 0xFF);
+	rgb2[3] = (dest.color & 0xFF);
 	mix = get_ratio(index, start, dest);
 	MarkMix(rgb1, rgb2, mix, result);
-	return (result[0] << 24 | result[1] << 16 | result[2] << 8 | 0xFF);
+	result[3] = rgb1[3] + (rgb2[3] - rgb1[3]) * mix;
+	return (result[0] << 24 | result[1] << 16 | result[2] << 8 | result[3]);
 }
