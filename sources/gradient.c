@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 19:10:00 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 22:34:34 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:51:10 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,60 +46,37 @@ float	get_ratio(t_dot index, t_dot start, t_dot dest)
 	return (mix);
 }
 
-// size_t	gradient(t_dot index, t_dot strt, t_dot dest)
+// // Function to normalize RGB values from 0..255 to 0..1
+// void Normalize(uint8_t r, uint8_t g, uint8_t b, float *r1, float *g1, float *b1)
 // {
-// 	float	fraction;
-// 	int		rgba[4];
-
-// 	fraction = get_ratio(index, strt, dest);
-// 	rgba[0] = (strt.color >> 24 & 0xFF) + ((dest.color >> 24 & 0xFF)
-// 			- (strt.color >> 24 & 0xFF)) * fraction;
-// 	rgba[1] = (strt.color >> 16 & 0xFF) + ((dest.color >> 16 & 0xFF)
-// 			- (strt.color >> 16 & 0xFF)) * fraction;
-// 	rgba[2] = (strt.color >> 8 & 0xFF) + ((dest.color >> 8 & 0xFF)
-// 			- (strt.color >> 8 & 0xFF)) * fraction;
-// 	rgba[3] = (strt.color & 0xFF) + ((dest.color & 0xFF)
-// 			- (strt.color & 0xFF)) * fraction;
-// 	printf("fraction%f\n", fraction);
-// 	return (rgba[0] << 24 | rgba[1] << 16 | rgba[2] << 8 | rgba[3]);
+// 	*r1 = r / 255.0f;
+// 	*g1 = g / 255.0f;
+// 	*b1 = b / 255.0f;
 // }
 
+// // Function to apply inverse sRGB companding
+// void sRGBInverseCompanding(float r, float g, float b, float *r1, float *g1, float *b1)
+// {
+// 	if (r <= 0.04045)
+// 		*r1 = r / 12.92;
+// 	else
+// 		*r1 = pow((r + 0.055) / 1.055, 2.4);
 
+// 	if (g <= 0.04045)
+// 		*g1 = g / 12.92;
+// 	else
+// 		*g1 = pow((g + 0.055) / 1.055, 2.4);
 
-
-
-
-
-// Function to normalize RGB values from 0..255 to 0..1
-void Normalize(uint8_t r, uint8_t g, uint8_t b, float *r1, float *g1, float *b1)
-{
-	*r1 = r / 255.0f;
-	*g1 = g / 255.0f;
-	*b1 = b / 255.0f;
-}
-
-// Function to apply inverse sRGB companding
-void sRGBInverseCompanding(float r, float g, float b, float *r1, float *g1, float *b1)
-{
-	if (r <= 0.04045)
-		*r1 = r / 12.92;
-	else
-		*r1 = pow((r + 0.055) / 1.055, 2.4);
-
-	if (g <= 0.04045)
-		*g1 = g / 12.92;
-	else
-		*g1 = pow((g + 0.055) / 1.055, 2.4);
-
-	if (b <= 0.04045)
-		*b1 = b / 12.92;
-	else
-		*b1 = pow((b + 0.055) / 1.055, 2.4);
-}
+// 	if (b <= 0.04045)
+// 		*b1 = b / 12.92;
+// 	else
+// 		*b1 = pow((b + 0.055) / 1.055, 2.4);
+// }
 
 // Function for linear interpolation
-float LinearInterpolation(float a, float b, float mix) {
-	return a * (1 - mix) + b * mix;
+float	linear_interpolation(float a, float b, float mix)
+{
+	return (a * (1 - mix) + b * mix);
 }
 
 // Function to apply sRGB companding
@@ -120,6 +97,21 @@ void sRGBCompanding(float r, float g, float b, uint8_t *r1, uint8_t *g1, uint8_t
 		*b1 = (1.055 * pow(b, 1 / 2.4) - 0.055) * 255;
 }
 
+float	prep_color(float color)
+{
+	float	normalized;
+
+	//normalization
+	normalized = color / 255.0f;
+	//inverse companding
+	if (normalized <= 0.04045)
+		normalized = normalized / 12.92;
+	else
+		normalized = pow((normalized + 0.055) / 1.055, 2.4);
+	//linear interpolation
+	return (normalized);
+}
+
 // Main MarkMix function
 void MarkMix(uint8_t *rgb1, uint8_t *rgb2, float mix, uint8_t *result)
 {
@@ -130,22 +122,28 @@ void MarkMix(uint8_t *rgb1, uint8_t *rgb2, float mix, uint8_t *result)
 	float	intensity;
 	float	factor;
 
-	// Normalize colors
-	Normalize(rgb1[0], rgb1[1], rgb1[2], &norm1[0], &norm1[1], &norm1[2]);
-	Normalize(rgb2[0], rgb2[1], rgb2[2], &norm2[0], &norm2[1], &norm2[2]);
-	// Apply inverse sRGB companding
-	sRGBInverseCompanding(norm1[0], norm1[1], norm1[2], &norm1[0], &norm1[1], &norm1[2]);
-	sRGBInverseCompanding(norm2[0], norm2[1], norm2[2], &norm2[0], &norm2[1], &norm2[2]);
+	// // Normalize colors
+	// Normalize(rgb1[0], rgb1[1], rgb1[2], &norm1[0], &norm1[1], &norm1[2]);
+	// Normalize(rgb2[0], rgb2[1], rgb2[2], &norm2[0], &norm2[1], &norm2[2]);
+	// // Apply inverse sRGB companding
+	// sRGBInverseCompanding(norm1[0], norm1[1], norm1[2], &norm1[0], &norm1[1], &norm1[2]);
+	// sRGBInverseCompanding(norm2[0], norm2[1], norm2[2], &norm2[0], &norm2[1], &norm2[2]);
+	norm1[0] = prep_color(rgb1[0]);
+	norm1[1] = prep_color(rgb1[1]);
+	norm1[2] = prep_color(rgb1[2]);
+	norm2[0] = prep_color(rgb2[0]);
+	norm2[1] = prep_color(rgb2[1]);
+	norm2[2] = prep_color(rgb2[2]);
 	// Linearly interpolate r, g, b values
-	rgb[0] = LinearInterpolation(norm1[0], norm2[0], mix);
-	rgb[1] = LinearInterpolation(norm1[1], norm2[1], mix);
-	rgb[2] = LinearInterpolation(norm1[2], norm2[2], mix);
+	rgb[0] = linear_interpolation(norm1[0], norm2[0], mix);
+	rgb[1] = linear_interpolation(norm1[1], norm2[1], mix);
+	rgb[2] = linear_interpolation(norm1[2], norm2[2], mix);
 	// Compute brightness
 
 	brightness[1] = pow(norm1[0] + norm1[1] + norm1[2], GAMMA);
 	brightness[2] = pow(norm2[0] + norm2[1] + norm2[2], GAMMA);
 	// Interpolate brightness and adjust intensity
-	brightness[0] = LinearInterpolation(brightness[1], brightness[2], mix);
+	brightness[0] = linear_interpolation(brightness[1], brightness[2], mix);
 	intensity = pow(brightness[0], 1 / GAMMA);
 	// Adjustment factor
 	if ((rgb[0] + rgb[1] + rgb[2]) != 0)
