@@ -1,0 +1,44 @@
+Algorithm MarkMix
+   Input:
+      color1: Color, (rgb)   The first color to mix
+      color2: Color, (rgb)   The second color to mix
+      mix:    Number, (0..1) The mix ratio. 0 ==> pure Color1, 1 ==> pure Color2
+   Output:
+      color:  Color, (rgb)   The mixed color
+   
+   //Convert each color component from 0..255 to 0..1
+   r1, g1, b1 ← Normalize(color1)
+   r2, g2, b2 ← Normalize(color1)
+
+   //Apply inverse sRGB companding to convert each channel into linear light
+   r1, g1, b1 ← sRGBInverseCompanding(r1, g1, b1)       
+   r2, g2, b2 ← sRGBInverseCompanding(r2, g2, b2)
+
+   //Linearly interpolate r, g, b values using mix (0..1)
+   r ← LinearInterpolation(r1, r2, mix)
+   g ← LinearInterpolation(g1, g2, mix)
+   b ← LinearInterpolation(b1, b2, mix)
+
+   //Compute a measure of brightness of the two colors using empirically determined gamma
+   gamma ← 0.43
+   brightness1 ← Pow(r1+g1+b1, gamma)
+   brightness2 ← Pow(r2+g2+b2, gamma)
+
+   //Interpolate a new brightness value, and convert back to linear light
+   brightness ← LinearInterpolation(brightness1, brightness2, mix)
+   intensity ← Pow(brightness, 1/gamma)
+
+   //Apply adjustment factor to each rgb value based
+   if ((r+g+b) != 0) then
+      factor ← (intensity / (r+g+b))
+      r ← r * factor
+      g ← g * factor
+      b ← b * factor
+   end if
+
+   //Apply sRGB companding to convert from linear to perceptual light
+   r, g, b ← sRGBCompanding(r, g, b)
+
+   //Convert color components from 0..1 to 0..255
+   Result ← MakeColor(r, g, b)
+End Algorithm MarkMix
