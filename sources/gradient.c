@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 19:10:00 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 22:12:40 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:27:36 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,62 +128,58 @@ void MakeColor(float r, float g, float b, uint8_t *r1, uint8_t *g1, uint8_t *b1)
 }
 
 // Main MarkMix function
-void MarkMix(uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2, float mix, uint8_t *result_r, uint8_t *result_g, uint8_t *result_b) {
+void MarkMix(uint8_t *rgb1, uint8_t *rgb2, float mix, uint8_t *result)
+{
 	float	norm1[3];
 	float	norm2[3];
 	float	rgb[3];
 	float	brightness[3];
-	// float brightness1, brightness2, brightness;
-	float intensity;
-	float factor;
+	float	intensity;
+	float	factor;
 
 	// Normalize colors
-	Normalize(r1, g1, b1, &norm1[0], &norm1[1], &norm1[2]);
-	Normalize(r2, g2, b2, &norm2[0], &norm2[1], &norm2[2]);
-
+	Normalize(rgb1[0], rgb1[1], rgb1[2], &norm1[0], &norm1[1], &norm1[2]);
+	Normalize(rgb2[0], rgb2[1], rgb2[2], &norm2[0], &norm2[1], &norm2[2]);
 	// Apply inverse sRGB companding
 	sRGBInverseCompanding(norm1[0], norm1[1], norm1[2], &norm1[0], &norm1[1], &norm1[2]);
 	sRGBInverseCompanding(norm2[0], norm2[1], norm2[2], &norm2[0], &norm2[1], &norm2[2]);
-
 	// Linearly interpolate r, g, b values
 	rgb[0] = LinearInterpolation(norm1[0], norm2[0], mix);
 	rgb[1] = LinearInterpolation(norm1[1], norm2[1], mix);
 	rgb[2] = LinearInterpolation(norm1[2], norm2[2], mix);
-
 	// Compute brightness
-	float gamma = 0.43;
-	brightness[1] = pow(norm1[0] + norm1[1] + norm1[2], gamma);
-	brightness[2] = pow(norm2[0] + norm2[1] + norm2[2], gamma);
 
+	brightness[1] = pow(norm1[0] + norm1[1] + norm1[2], GAMMA);
+	brightness[2] = pow(norm2[0] + norm2[1] + norm2[2], GAMMA);
 	// Interpolate brightness and adjust intensity
 	brightness[0] = LinearInterpolation(brightness[1], brightness[2], mix);
-	intensity = pow(brightness[0], 1 / gamma);
-
+	intensity = pow(brightness[0], 1 / GAMMA);
 	// Adjustment factor
-	if ((rgb[0] + rgb[1] + rgb[2]) != 0) {
+	if ((rgb[0] + rgb[1] + rgb[2]) != 0)
+	{
 		factor = intensity / (rgb[0] + rgb[1] + rgb[2]);
 		rgb[0] *= factor;
 		rgb[1] *= factor;
 		rgb[2] *= factor;
 	}
-
 	// Apply sRGB companding
-	sRGBCompanding(rgb[0], rgb[1], rgb[2], result_r, result_g, result_b);
+	sRGBCompanding(rgb[0], rgb[1], rgb[2], &result[0], &result[1], &result[2]);
 }
 
 size_t	gradient(t_dot index, t_dot start, t_dot dest)
 {
-	uint8_t	r1 = ((start.color >> 24) & 0xFF);
-	uint8_t	g1 = ((start.color >> 16) & 0xFF);
-	uint8_t	b1 = ((start.color >> 8) & 0xFF);
-	uint8_t	r2 = ((dest.color >> 24) & 0xFF);
-	uint8_t	g2 = ((dest.color >> 16) & 0xFF);
-	uint8_t	b2 = ((dest.color >> 8) & 0xFF);
-	uint8_t	r;
-	uint8_t	g;
-	uint8_t	b;
-	float	mix = get_ratio(index, start, dest);
+	uint8_t	rgb1[3];
+	uint8_t	rgb2[3];
+	float	mix;
+	uint8_t	result[3];
 
-	MarkMix(r1, g1, b1, r2, g2, b2, mix, &r, &g, &b);
-	return (r << 24 | g << 16 | b << 8 | 0xFF);
+	rgb1[0] = ((start.color >> 24) & 0xFF);
+	rgb1[1] = ((start.color >> 16) & 0xFF);
+	rgb1[2] = ((start.color >> 8) & 0xFF);
+	rgb2[0] = ((dest.color >> 24) & 0xFF);
+	rgb2[1] = ((dest.color >> 16) & 0xFF);
+	rgb2[2] = ((dest.color >> 8) & 0xFF);
+	mix = get_ratio(index, start, dest);
+	MarkMix(rgb1, rgb2, mix, result);
+	return (result[0] << 24 | result[1] << 16 | result[2] << 8 | 0xFF);
 }

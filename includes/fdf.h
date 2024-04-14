@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 19:11:01 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:26:17 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@
 
 # ifndef DEFAULT_ANGLE
 #  define DEFAULT_ANGLE 0.523599
+# endif
+
+# ifndef GAMMA
+#  define GAMMA 0.43
 # endif
 
 typedef struct s_dot
