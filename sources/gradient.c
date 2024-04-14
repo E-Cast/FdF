@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 19:10:00 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 23:56:39 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/14 00:12:42 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,65 +48,55 @@ float	get_ratio(t_dot index, t_dot start, t_dot dest)
 
 void	prep_color(int *rgb, float *res)
 {
-	res[0] = norm(rgb[0]);
-	res[0] = i_comp(res[0]);
-	res[1] = norm(rgb[1]);
-	res[1] = i_comp(res[1]);
-	res[2] = norm(rgb[2]);
-	res[2] = i_comp(res[2]);
-}
-
-// Function to apply sRGB companding
-void	sRGBCompanding(float *rgb, int *res)
-{
-	res[0] = comp(rgb[0]);
-	res[1] = comp(rgb[1]);
-	res[2] = comp(rgb[2]);
+	res[0] = i_comp(norm(rgb[0]));
+	res[1] = i_comp(norm(rgb[1]));
+	res[2] = i_comp(norm(rgb[2]));
 }
 
 // Main MarkMix function
-void	mark_mix(int *rgb1, int *rgb2, float mix, int *result)
+int	mark_mix(int *rgb1, int *rgb2, float mix)
 {
-	float	n1[3];
-	float	n2[3];
-	float	rgb[3];
+	float	tmp1[3];
+	float	tmp2[3];
+	float	rgba[4];
 	float	brightness;
 	float	factor;
 
-	prep_color(rgb1, n1);
-	prep_color(rgb2, n2);
-	rgb[0] = intrp(n1[0], n2[0], mix);
-	rgb[1] = intrp(n1[1], n2[1], mix);
-	rgb[2] = intrp(n1[2], n2[2], mix);
-	brightness = intrp(pow(n1[0] + n1[1] + n1[2], GAMMA),
-			pow(n2[0] + n2[1] + n2[2], GAMMA), mix);
-	if ((rgb[0] + rgb[1] + rgb[2]) != 0)
+	prep_color(rgb1, tmp1);
+	prep_color(rgb2, tmp2);
+	rgba[0] = intrp(tmp1[0], tmp2[0], mix);
+	rgba[1] = intrp(tmp1[1], tmp2[1], mix);
+	rgba[2] = intrp(tmp1[2], tmp2[2], mix);
+	brightness = intrp(pow(tmp1[0] + tmp1[1] + tmp1[2], GAMMA),
+			pow(tmp2[0] + tmp2[1] + tmp2[2], GAMMA), mix);
+	if ((rgba[0] + rgba[1] + rgba[2]) != 0)
 	{
-		factor = pow(brightness, 1 / GAMMA) / (rgb[0] + rgb[1] + rgb[2]);
-		rgb[0] *= factor;
-		rgb[1] *= factor;
-		rgb[2] *= factor;
+		factor = pow(brightness, 1 / GAMMA) / (rgba[0] + rgba[1] + rgba[2]);
+		rgba[0] *= factor;
+		rgba[1] *= factor;
+		rgba[2] *= factor;
 	}
-	sRGBCompanding(rgb, result);
+	rgba[3] = rgb1[3] + (rgb2[3] - rgb1[3]) * mix;
+	return (comp(rgba[0]) << 24 | comp(rgba[1]) << 16
+		| comp(rgba[2]) << 8 | (int)rgba[3]);
 }
 
-size_t	gradient(t_dot index, t_dot start, t_dot dest)
+void	hex_to_rgba(int hex, int *rgba)
 {
-	int		rgb1[4];
-	int		rgb2[4];
-	float	mix;
-	int		result[4];
+	rgba[0] = ((hex >> 24) & 0xFF);
+	rgba[1] = ((hex >> 16) & 0xFF);
+	rgba[2] = ((hex >> 8) & 0xFF);
+	rgba[3] = (hex & 0xFF);
+}
 
-	rgb1[0] = ((start.color >> 24) & 0xFF);
-	rgb1[1] = ((start.color >> 16) & 0xFF);
-	rgb1[2] = ((start.color >> 8) & 0xFF);
-	rgb1[3] = (start.color & 0xFF);
-	rgb2[0] = ((dest.color >> 24) & 0xFF);
-	rgb2[1] = ((dest.color >> 16) & 0xFF);
-	rgb2[2] = ((dest.color >> 8) & 0xFF);
-	rgb2[3] = (dest.color & 0xFF);
+int	gradient(t_dot index, t_dot start, t_dot dest)
+{
+	int		rgba1[4];
+	int		rgba2[4];
+	float	mix;
+
+	hex_to_rgba(start.color, rgba1);
+	hex_to_rgba(dest.color, rgba2);
 	mix = get_ratio(index, start, dest);
-	mark_mix(rgb1, rgb2, mix, result);
-	result[3] = rgb1[3] + (rgb2[3] - rgb1[3]) * mix;
-	return (result[0] << 24 | result[1] << 16 | result[2] << 8 | result[3]);
+	return (mark_mix(rgba1, rgba2, mix));
 }

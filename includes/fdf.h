@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 23:45:44 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/14 00:09:53 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@
 
 typedef struct s_dot
 {
-	int		x;
-	int		y;
-	int		z;
-	size_t	color;
-	int		sx;
-	int		sy;
+	int	x;
+	int	y;
+	int	z;
+	int	color;
+	int	sx;
+	int	sy;
 }	t_dot;
 
 typedef struct s_modifiers
@@ -93,7 +93,7 @@ float	intrp(float a, float b, float mix);
 float	i_comp(float f);
 int		comp(float f);
 
-size_t	gradient(t_dot index, t_dot strt, t_dot dest);
+int		gradient(t_dot index, t_dot strt, t_dot dest);
 int		mlx_start(t_dot ***map, t_mods *mods);
 
 #endif
