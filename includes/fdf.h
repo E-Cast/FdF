@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/14 01:57:29 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/15 17:27:25 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@
 # ifndef DEFAULT_COLOR
 #  define DEFAULT_COLOR 0xFFFFFFFF
 # endif
+
+# ifndef DEFAULT_ALPHA
+#  define DEFAULT_ALPHA 0xFF
+# endif
+
 
 # ifndef DEFAULT_WIDTH
 #  define DEFAULT_WIDTH 1280

@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/12 21:55:55 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/15 17:53:21 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,24 +56,32 @@ t_list	*read_map(char *file_name)
  * @retval NULL On failure.
  * @retval A dot struct on success.
  */
-t_dot	*make_dot(char *raw_dot, int x, int y, size_t default_color)
+t_dot	*make_dot(char *data, int x, int y, size_t default_color)
 {
 	t_dot	*new_dot;
+	int		index1;
 
 	new_dot = ft_calloc(1, sizeof(t_dot));
 	if (new_dot == NULL)
 		return (NULL);
 	new_dot->x = x;
 	new_dot->y = y;
-	new_dot->z = ft_atoi(raw_dot);
-	while (*raw_dot && my_isspace(*raw_dot) != 0)
-		raw_dot++;
-	while (*raw_dot && (my_isspace(*raw_dot) == 0 && *raw_dot != ','))
-		raw_dot++;
-	if (*raw_dot == ',')
-		new_dot->color = my_atoh(raw_dot + 1);
-	else
-		new_dot->color = default_color;
+	new_dot->z = ft_atoi(data);
+	while (*data && my_isspace(*data) != 0)
+		data++;
+	while (*data && (my_isspace(*data) == 0 && *data != ','))
+		data++;
+	new_dot->color = default_color;
+	if (*data++ != ',')
+		return (new_dot);
+	if (*data && *data == '0' && (*data + 1 == 'x' || *data + 1 == 'X'))
+		data += 2;
+	index1 = 1;
+	while (data[index1] && my_isset(data[index1], "0123456789abcdefABCDEF"))
+		index1++;
+	new_dot->color = my_atoh(data);
+	if (index1 <= 6)
+		new_dot->color = (new_dot->color << 8) | DEFAULT_ALPHA;
 	return (new_dot);
 }
 
