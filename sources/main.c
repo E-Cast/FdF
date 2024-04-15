@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/13 09:31:40 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:16:27 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,17 @@ t_mods	init_mods(int argc, char **argv)
 {
 	t_mods	mods;
 
+
 	mods.xy_scale = XY_SCALE;
 	if (argc >= 3)
 		mods.xy_scale = ft_atoi(argv[2]);
 	mods.z_scale = Z_SCALE;
 	if (argc >= 4)
 		mods.z_scale = ft_atoi(argv[3]);
+	mods.color[0] = DEFAULT_COLOR;
+	if (argc >= 5)
+		mods.color[0] = my_atoh(argv[4]);
+	mods.color[1] = DEFAULT_ALPHA;
 	mods.window_width = DEFAULT_WIDTH;
 	mods.window_height = DEFAULT_HEIGHT;
 	if (argc >= 6)
@@ -69,13 +74,10 @@ int	main(int argc, char **argv)
 			STDERR_FILENO);
 		return (1);
 	}
-	if (argc >= 5)
-		map = build_map(argv[1], my_atoh(argv[4]));
-	else
-		map = build_map(argv[1], DEFAULT_COLOR);
+	mods = init_mods(argc, argv);
+	map = build_map(argv[1], mods.color);
 	if (map == NULL)
 		return (ft_putendl_fd("Failed to read map.", STDERR_FILENO), 1);
-	mods = init_mods(argc, argv);
 	update_map(map, &mods);
 	mlx_start(map, &mods);
 	free_map(map);

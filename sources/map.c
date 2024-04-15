@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:27:52 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/15 17:53:21 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/15 17:59:46 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ t_list	*read_map(char *file_name)
  * @param raw_dot Raw data used to fill the struct.
  * @param x Data used to fill the struct.
  * @param y Data used to fill the struct.
- * @param default_color Data used to fill the struct.
+ * @param default_color Default color for dots with no specified color.
  * @retval NULL On failure.
  * @retval A dot struct on success.
  */
-t_dot	*make_dot(char *data, int x, int y, size_t default_color)
+t_dot	*make_dot(char *data, int x, int y, size_t *default_color)
 {
 	t_dot	*new_dot;
 	int		index1;
@@ -71,7 +71,7 @@ t_dot	*make_dot(char *data, int x, int y, size_t default_color)
 		data++;
 	while (*data && (my_isspace(*data) == 0 && *data != ','))
 		data++;
-	new_dot->color = default_color;
+	new_dot->color = default_color[0];
 	if (*data++ != ',')
 		return (new_dot);
 	if (*data && *data == '0' && (*data + 1 == 'x' || *data + 1 == 'X'))
@@ -81,7 +81,7 @@ t_dot	*make_dot(char *data, int x, int y, size_t default_color)
 		index1++;
 	new_dot->color = my_atoh(data);
 	if (index1 <= 6)
-		new_dot->color = (new_dot->color << 8) | DEFAULT_ALPHA;
+		new_dot->color = (new_dot->color << 8) | default_color[1];
 	return (new_dot);
 }
 
@@ -94,7 +94,7 @@ t_dot	*make_dot(char *data, int x, int y, size_t default_color)
  * @retval NULL On failure.
  * @retval An array of dots on success.
  */
-t_dot	**line_to_dots(char *line, int y, size_t color)
+t_dot	**line_to_dots(char *line, int y, size_t *color)
 {
 	t_dot	**map_line;
 	int		inx;
@@ -131,7 +131,7 @@ t_dot	**line_to_dots(char *line, int y, size_t color)
  * @retval NULL on failure.
  * @retval The map on success.
  */
-t_dot	***build_map(char *map_file, size_t color)
+t_dot	***build_map(char *map_file, size_t *color)
 {
 	t_list	*lines;
 	t_list	*line_indx;

@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 01:11:21 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/14 01:57:20 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:13:35 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	mlx_start(t_dot ***map, t_mods *mods)
 	fdf_img = make_image(mlx, fdf_width, mods->window_height, ui_width);
 	if (!fdf_img)
 		return (EXIT_FAILURE);
-	ui_img = make_image(mlx, ui_width, mods->window_height, 0);
+	ui_img = make_image(mlx, ui_width, mods->window_height + 1000, 0);
 	if (!ui_img)
 		return (EXIT_FAILURE);
 	ft_memset(ui_img->pixels, 150, ui_width * mods->window_height * sizeof(int));

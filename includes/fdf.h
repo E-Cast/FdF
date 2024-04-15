@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/15 17:27:25 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:03:54 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_dot
 
 typedef struct s_modifiers
 {
+	size_t	color[2];
 	int		xy_scale;
 	int		z_scale;
 	int		window_width;
@@ -76,9 +77,9 @@ typedef struct s_modifiers
 # endif
 
 t_list	*read_map(char *map_file);
-t_dot	*make_dot(char *raw_dot, int x, int y, size_t default_color);
-t_dot	**line_to_dots(char *line, int y, size_t color);
-t_dot	***build_map(char *map_file, size_t color);
+t_dot	*make_dot(char *raw_dot, int x, int y, size_t *default_color);
+t_dot	**line_to_dots(char *line, int y, size_t *color);
+t_dot	***build_map(char *map_file, size_t *color);
 void	free_map(t_dot	***map);
 
 /*Line drawing functions.*/
