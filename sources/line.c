@@ -6,11 +6,23 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 03:29:38 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/15 18:17:12 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/16 20:14:57 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+void	*safe_put_pixel(mlx_image_t *fdf, int x, int y, size_t color)
+{
+	if (x < 0 || (uint8_t)x > fdf->width || y < 0 || (uint8_t)y > fdf->height)
+	{
+		ft_putendl_fd("Error: attempted to put pixel out of bounds",
+			STDERR_FILENO);
+		return (NULL);
+	}
+	mlx_put_pixel(fdf, x, y, color);
+	return (fdf);
+}
 
 /**
  * @brief Draws a horizontally inclined line of pixels
@@ -36,7 +48,7 @@ void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 	d = (2 * dy) - dx;
 	while (index.sx++ < dest.sx)
 	{
-		mlx_put_pixel(fdf, index.sx, index.sy, gradient(index, start, dest));
+		safe_put_pixel(fdf, index.sx, index.sy, gradient(index, start, dest));
 		if (d > 0)
 		{
 			index.sy = index.sy + yi;
@@ -71,7 +83,7 @@ void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
 	d = (2 * dx) - dy;
 	while (index.sy++ < dest.sy)
 	{
-		mlx_put_pixel(fdf, index.sx, index.sy, gradient(index, start, dest));
+		safe_put_pixel(fdf, index.sx, index.sy, gradient(index, start, dest));
 		if (d > 0)
 		{
 			index.sx = index.sx + xi;
@@ -91,8 +103,8 @@ void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest)
  */
 void	draw_line(mlx_image_t *fdf, t_dot *start, t_dot *dest)
 {
-	mlx_put_pixel(fdf, start->sx, start->sy, start->color);
-	mlx_put_pixel(fdf, dest->sx, dest->sy, dest->color);
+	safe_put_pixel(fdf, start->sx, start->sy, start->color);
+	safe_put_pixel(fdf, dest->sx, dest->sy, dest->color);
 	if (abs(dest->sy - start->sy) < abs(dest->sx - start->sx))
 	{
 		if (start->sx > dest->sx)

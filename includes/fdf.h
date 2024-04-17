@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/15 18:03:54 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/16 20:15:31 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	free_map(t_dot	***map);
 
 /*Line drawing functions.*/
 
+void	*safe_put_pixel(mlx_image_t *fdf, int x, int y, size_t color);
 void	low_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
 void	high_slope(mlx_image_t *fdf, t_dot index, t_dot start, t_dot dest);
 void	draw_line(mlx_image_t *fdf, t_dot *start, t_dot *dest);
