@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/16 20:15:31 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/22 06:07:34 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,13 @@
 # include <MLX42/MLX42_Int.h>
 # include "libft.h"
 
-# ifndef XY_SCALE
-#  define XY_SCALE 20
+# ifndef DEFAULT_SCALE
+#  define DEFAULT_SCALE 10
 # endif
 
-# ifndef Z_SCALE
-#  define Z_SCALE 7
+# ifndef DEFAULT_ANGLE
+#  define DEFAULT_ANGLE 0.523599
 # endif
-
-# ifndef DEFAULT_COLOR
-#  define DEFAULT_COLOR 0xFFFFFFFF
-# endif
-
-# ifndef DEFAULT_ALPHA
-#  define DEFAULT_ALPHA 0xFF
-# endif
-
 
 # ifndef DEFAULT_WIDTH
 #  define DEFAULT_WIDTH 1280
@@ -46,8 +37,12 @@
 #  define DEFAULT_HEIGHT 720
 # endif
 
-# ifndef DEFAULT_ANGLE
-#  define DEFAULT_ANGLE 0.523599
+# ifndef DEFAULT_COLOR
+#  define DEFAULT_COLOR 0xFFFFFFFF
+# endif
+
+# ifndef DEFAULT_ALPHA
+#  define DEFAULT_ALPHA 0xFF
 # endif
 
 typedef struct s_dot
@@ -62,12 +57,11 @@ typedef struct s_dot
 
 typedef struct s_modifiers
 {
-	size_t	color[2];
-	int		xy_scale;
-	int		z_scale;
+	int		scale;
+	float	angle;
 	int		window_width;
 	int		window_height;
-	float	angle;
+	size_t	color[2];
 }	t_mods;
 
 /*Map functions.*/
