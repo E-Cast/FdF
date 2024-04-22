@@ -6,47 +6,47 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:58:48 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/22 06:06:45 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/22 06:09:24 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_mods	init_mods(int argc, char **argv)
+t_params	init_params(int argc, char **argv)
 {
-	t_mods	mods;
+	t_params	params;
 
 
-	mods.scale = DEFAULT_SCALE;
+	params.scale = DEFAULT_SCALE;
 	if (argc >= 3)
-		mods.scale = ft_atoi(argv[2]);
-	mods.angle = DEFAULT_ANGLE;
-	mods.window_width = DEFAULT_WIDTH;
-	mods.window_height = DEFAULT_HEIGHT;
+		params.scale = ft_atoi(argv[2]);
+	params.angle = DEFAULT_ANGLE;
+	params.window_width = DEFAULT_WIDTH;
+	params.window_height = DEFAULT_HEIGHT;
 	if (argc >= 4)
 	{
-		mods.window_width = ft_atoi(argv[3]);
+		params.window_width = ft_atoi(argv[3]);
 		if (ft_strchr(argv[3], ','))
 			if (ft_isdigit(*ft_strchr(argv[3], ',') + 1))
 				ft_atoi(ft_strchr(argv[3], ',') + 1);
 	}
-	mods.color[0] = DEFAULT_COLOR;
-	mods.color[1] = DEFAULT_ALPHA;
-	return (mods);
+	params.color[0] = DEFAULT_COLOR;
+	params.color[1] = DEFAULT_ALPHA;
+	return (params);
 }
 
-void	update_dot(t_dot *dot, t_mods *mods)
+void	update_dot(t_dot *dot, t_params *params)
 {
-	dot->sx = (dot->x - dot->y) * mods->scale * cos(mods->angle);
-	dot->sy = (dot->x + dot->y) * mods->scale * sin(mods->angle)
-		- dot->z * mods->scale;
-	dot->sx += (mods->window_width / 100 * 80) / 2;
-	dot->sy += mods->window_height / 4;
-	// dot->sx += mods->window_width / 2;
-	// dot->sy += mods->window_height / 2;
+	dot->sx = (dot->x - dot->y) * params->scale * cos(params->angle);
+	dot->sy = (dot->x + dot->y) * params->scale * sin(params->angle)
+		- dot->z * params->scale;
+	dot->sx += (params->window_width / 100 * 80) / 2;
+	dot->sy += params->window_height / 4;
+	// dot->sx += params->window_width / 2;
+	// dot->sy += params->window_height / 2;
 }
 
-void	update_map(t_dot ***map, t_mods *mods)
+void	update_map(t_dot ***map, t_params *params)
 {
 	int	x_indx;
 	int	y_indx;
@@ -56,15 +56,15 @@ void	update_map(t_dot ***map, t_mods *mods)
 	{
 		x_indx = 0;
 		while (map[y_indx][x_indx])
-			update_dot(map[y_indx][x_indx++], mods);
+			update_dot(map[y_indx][x_indx++], params);
 		y_indx++;
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	t_dot	***map;
-	t_mods	mods;
+	t_dot		***map;
+	t_params	params;
 
 	if (argc < 2 || argc > 4)
 	{
@@ -72,11 +72,11 @@ int	main(int argc, char **argv)
 		ft_putendl_fd("E.G: ./fdf map.txt 10 1280,720", STDERR_FILENO);
 		return (1);
 	}
-	mods = init_mods(argc, argv);
-	map = build_map(argv[1], mods.color);
+	params = init_params(argc, argv);
+	map = build_map(argv[1], params.color);
 	if (map == NULL)
 		return (ft_putendl_fd("Failed to read map.", STDERR_FILENO), 1);
-	update_map(map, &mods);
-	mlx_start(map, &mods);
+	update_map(map, &params);
+	mlx_start(map, &params);
 	free_map(map);
 }

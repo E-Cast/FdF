@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 18:45:12 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/22 06:07:34 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/22 06:08:26 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ typedef struct s_dot
 	int	sy;
 }	t_dot;
 
-typedef struct s_modifiers
+typedef struct s_parameters
 {
 	int		scale;
 	float	angle;
 	int		window_width;
 	int		window_height;
 	size_t	color[2];
-}	t_mods;
+}	t_params;
 
 /*Map functions.*/
 
@@ -103,6 +103,6 @@ int		gradient(t_dot index, t_dot start, t_dot dest);
 
 
 
-int		mlx_start(t_dot ***map, t_mods *mods);
+int		mlx_start(t_dot ***map, t_params *mods);
 
 #endif

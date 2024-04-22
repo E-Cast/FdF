@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 01:11:21 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/15 18:13:35 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/22 06:10:07 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ mlx_image_t	*make_image(mlx_t *mlx, int width, int height, int start)
 // 	}
 // }
 
-int	mlx_start(t_dot ***map, t_mods *mods)
+int	mlx_start(t_dot ***map, t_params *params)
 {
 	mlx_t		*mlx;
 	mlx_image_t	*fdf_img;
@@ -54,18 +54,18 @@ int	mlx_start(t_dot ***map, t_mods *mods)
 	int			ui_width;
 
 	mlx_set_setting(MLX_STRETCH_IMAGE, false);
-	fdf_width = mods->window_width / 100 * 80;
-	ui_width = mods->window_width - fdf_width;
-	mlx = mlx_init(mods->window_width, mods->window_height, "FdF", true);
+	fdf_width = params->window_width / 100 * 80;
+	ui_width = params->window_width - fdf_width;
+	mlx = mlx_init(params->window_width, params->window_height, "FdF", true);
 	if (!mlx)
 		return (EXIT_FAILURE);
-	fdf_img = make_image(mlx, fdf_width, mods->window_height, ui_width);
+	fdf_img = make_image(mlx, fdf_width, params->window_height, ui_width);
 	if (!fdf_img)
 		return (EXIT_FAILURE);
-	ui_img = make_image(mlx, ui_width, mods->window_height + 1000, 0);
+	ui_img = make_image(mlx, ui_width, params->window_height + 1000, 0);
 	if (!ui_img)
 		return (EXIT_FAILURE);
-	ft_memset(ui_img->pixels, 150, ui_width * mods->window_height * sizeof(int));
+	ft_memset(ui_img->pixels, 150, ui_width * params->window_height * sizeof(int));
 	draw_all(fdf_img, map);
 	mlx_loop(mlx);
 	mlx_delete_image(mlx, fdf_img);
