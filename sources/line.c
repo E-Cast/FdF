@@ -6,7 +6,7 @@
 /*   By: ecastong <ecastong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 03:29:38 by ecastong          #+#    #+#             */
-/*   Updated: 2024/04/16 20:14:57 by ecastong         ###   ########.fr       */
+/*   Updated: 2024/04/22 05:36:33 by ecastong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	*safe_put_pixel(mlx_image_t *fdf, int x, int y, size_t color)
 {
-	if (x < 0 || (uint8_t)x > fdf->width || y < 0 || (uint8_t)y > fdf->height)
+	if (x < 0 || x >= (int)fdf->width || y < 0 || y >= (int)fdf->height)
 	{
-		ft_putendl_fd("Error: attempted to put pixel out of bounds",
-			STDERR_FILENO);
+		// ft_putendl_fd("Error: attempted to put pixel out of bounds",
+		// 	STDERR_FILENO);
 		return (NULL);
 	}
 	mlx_put_pixel(fdf, x, y, color);
@@ -132,6 +132,7 @@ void	draw_all(mlx_image_t *fdf, t_dot ***map)
 	int	x_indx;
 	int	y_indx;
 
+	ft_memset(fdf->pixels, 100, fdf->width * fdf->height * sizeof(int));
 	y_indx = 0;
 	while (map[y_indx])
 	{
