@@ -1,15 +1,17 @@
-SRC				=	color_ops.c \
-					gradient.c \
-					line.c \
-					main.c \
+FDF_SRC			=	main.c \
 					map.c \
-					mlx.c \
+					mlx.c
+
+DRAW_SRC		=	color_ops.c \
+					gradient.c \
+					line.c
+DRAW_DIR		:=	draw/
+DRAW_SRC		:=	$(addprefix $(DRAW_DIR), $(DRAW_SRC))
 
 SRC_DIR			:=	sources/
 OBJ_DIR			:=	objects/
-SRC				:=	$(addprefix $(SRC_DIR), $(SRC))
+SRC				:=	$(addprefix $(SRC_DIR), $(FDF_SRC) $(DRAW_SRC))
 OBJ				:=	$(subst $(SRC_DIR), $(OBJ_DIR), $(SRC:.c=.o))
-NAME			:=	fdf
 
 LIBFT_DIR		:=	libft/
 LIBFT_INCLUDE	:=	-I $(LIBFT_DIR)includes
@@ -21,6 +23,7 @@ MLX42_INCLUDE	:= -I $(MLX42_DIR)include
 MLX42			:= $(MLX42_DIR)build/libmlx42.a
 MLX42_FLAGS		:= -ldl -lglfw -pthread -lm
 
+NAME			:=	fdf
 DEBUG			:=	-g
 OPTIMIZE		:=	-Ofast
 CC				:=	gcc -Wall -Werror -Wextra -Wunreachable-code $(DEBUG) $(OPTIMIZE)
@@ -37,11 +40,11 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@echo "$(CC)$< $@"
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR) $(OBJ_DIR)$(DRAW_DIR)
 
 clean:
-	@rm -f $(OBJ)
-	@rm -f $(NAME)
+	@rm -rf $(OBJ)
+	@rm -rf $(NAME)
 
 re: clean all
 
